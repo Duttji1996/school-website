@@ -1,0 +1,53 @@
+<!-- PROFILE TAB -->
+<div class="profile-tab-content glass-card">
+  <div class="card-header" style="border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 20px;">
+    <h3 style="color: var(--primary-blue); font-family: var(--font-heading); font-size: 1.5rem; margin: 0;">Student Profile Details</h3>
+  </div>
+  
+  <div class="profile-grid">
+    <div class="profile-info-item">
+      <span class="info-label">Student ID / Roll No</span>
+      <p class="info-value">{{ data.studentId }} / {{ data.rollNumber }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Class & Section</span>
+      <p class="info-value">{{ data.className }} - Section {{ data.section }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Date of Birth</span>
+      <p class="info-value">{{ data.profileDetails.dob | date:'longDate' }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Gender</span>
+      <p class="info-value">{{ data.profileDetails.gender }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Blood Group</span>
+      <p class="info-value" style="color: var(--vibrant-red); font-weight: bold;">{{ data.profileDetails.bloodGroup }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Aadhar ID</span>
+      <p class="info-value">{{ data.profileDetails.aadharId }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Father's Name</span>
+      <p class="info-value">{{ data.profileDetails.fatherName }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Mother's Name</span>
+      <p class="info-value">{{ data.profileDetails.motherName }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Contact Number</span>
+      <p class="info-value">{{ data.profileDetails.contactNo }}</p>
+    </div>
+    <div class="profile-info-item" style="grid-column: 1 / -1;">
+      <span class="info-label">Address</span>
+      <p class="info-value">{{ data.profileDetails.address }}</p>
+    </div>
+    <div class="profile-info-item">
+      <span class="info-label">Admission Date</span>
+      <p class="info-value">{{ data.profileDetails.admissionDate | date:'longDate' }}</p>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,93 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary-blue: #4A90E2;
+  --sunny-yellow: #FADB5F;
+  --soft-green: #7ED321;
+  --vibrant-red: #FF5A5F;
+  --light-bg: #F9FAFC;
+  --text-dark: #2C3E50;
+  --text-light: #707B8E;
+  
+  --font-heading: 'Nunito', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Universal Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+}
+
+h1, h2, h3, h4, h5, h6, .brand-font {
+  font-family: var(--font-heading);
+  font-weight: 800;
+}
+
+/* Remove all list bullets app-wide */
+ul, li {
+  list-style: none !important;
+}
+
+a {
+  text-decoration: none !important;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-blue) !important;
+}
+
+.btn-primary-custom {
+  background-color: var(--primary-blue);
+  color: white;
+  border-radius: 50px;
+  padding: 10px 25px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+  color: white;
+}
+
+.btn-yellow {
+  background-color: var(--sunny-yellow);
+  color: var(--text-dark);
+  border-radius: 50px;
+  padding: 10px 25px;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-yellow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(250, 219, 95, 0.5);
+  color: var(--text-dark);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}

@@ -1,0 +1,44 @@
+<!-- HOMEWORK TAB -->
+<div class="homework-grid">
+  <div class="hw-section glass-card">
+    <h3 style="color: var(--vibrant-red);">Assigned Homework</h3>
+    <div class="hw-list">
+      @for (hw of data.homework; track hw.id) {
+        @if (hw.status === 'assigned') {
+          <div class="hw-item assigned">
+            <div class="hw-info">
+              <h4>{{ hw.subject }}</h4>
+              <p>{{ hw.title }}</p>
+            </div>
+            <div class="hw-meta">
+              <span class="due-date">Due: {{ hw.dueDate | date:'mediumDate' }}</span>
+              <button class="action-btn small-btn">Submit</button>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="hw-section glass-card">
+    <h3 style="color: var(--soft-green);">Submitted Homework</h3>
+    <div class="hw-list">
+      @for (hw of data.homework; track hw.id) {
+        @if (hw.status === 'submitted') {
+          <div class="hw-item submitted">
+            <div class="hw-info">
+              <h4>{{ hw.subject }}</h4>
+              <p>{{ hw.title }}</p>
+            </div>
+            <div class="hw-meta">
+              <span class="status-badge">Submitted</span>
+              @if (hw.grade) {
+                <span class="hw-grade">Grade: <strong>{{ hw.grade }}</strong></span>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

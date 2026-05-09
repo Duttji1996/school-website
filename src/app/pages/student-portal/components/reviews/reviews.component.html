@@ -1,0 +1,32 @@
+<!-- REVIEWS TAB -->
+<div class="reviews-container">
+  <div class="card-header" style="border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 20px;">
+    <h3 style="color: var(--primary-blue); font-family: var(--font-heading); font-size: 1.5rem; margin: 0;">Teacher Remarks & Reviews</h3>
+  </div>
+
+  @if (data.reviews.length) {
+    <div class="reviews-grid">
+      @for (review of data.reviews; track review.date) {
+        <div class="review-card">
+          <div class="review-header">
+            <div class="teacher-info">
+              <div class="avatar">{{ review.teacherName.charAt(0) }}</div>
+              <div>
+                <h4>{{ review.teacherName }}</h4>
+                <span class="subject-badge">{{ review.subject }}</span>
+              </div>
+            </div>
+            <span class="review-date">{{ review.date | date:'mediumDate' }}</span>
+          </div>
+          <div class="review-body">
+            <p>"{{ review.feedback }}"</p>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p>No reviews or remarks found for this student.</p>
+    </div>
+  }
+</div>

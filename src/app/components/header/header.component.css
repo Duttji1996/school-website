@@ -1,0 +1,162 @@
+/* ===== MAIN HEADER RE-DESIGN ===== */
+.main-header {
+  background: #334155; /* Mid-dark professional slate */
+  padding: 15px 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header-container {
+  max-width: 1300px;
+  margin: auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* BRAND SECTION */
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.school-logo {
+  background: var(--sunny-yellow);
+  color: #1e293b;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 18px;
+  box-shadow: 0 4px 15px rgba(250, 219, 95, 0.2);
+}
+
+.header-title {
+  font-size: 24px !important;
+  color: #f8fafc !important;
+  letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+  color: #cbd5e1 !important;
+  font-size: 12px;
+}
+
+/* NAVIGATION AREA */
+.main-nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.main-nav a:not(.btn-primary-custom) {
+  text-decoration: none;
+  color: #f8fafc;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 4px;
+}
+
+.main-nav a:not(.btn-primary-custom).active {
+  color: var(--sunny-yellow);
+}
+
+.main-nav a:not(.btn-primary-custom).active::after {
+  width: 100%;
+}
+
+/* Modern Hover Underline Effect */
+.main-nav a:not(.btn-primary-custom)::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 3px;
+  bottom: -6px;
+  left: 0;
+  background-color: var(--sunny-yellow);
+  transition: width 0.3s ease;
+  border-radius: 3px;
+}
+
+.main-nav a:not(.btn-primary-custom):hover {
+  color: var(--sunny-yellow) !important;
+}
+
+.main-nav a:not(.btn-primary-custom):hover::after {
+  width: 100%;
+}
+
+/* =========================================
+   MOBILE RESPONSIVE ADDITION
+   ========================================= */
+@media (max-width: 992px) {
+  .main-header {
+    padding: 12px 0;
+  }
+
+  .header-container {
+    flex-direction: column; /* Stack logo/title and nav */
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-section {
+    flex-direction: column; /* Stack logo and title */
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .school-logo {
+    padding: 8px 12px;
+    font-size: 16px;
+  }
+
+  .header-title {
+    font-size: 18px !important;
+    white-space: normal;
+    line-height: 1.2;
+    width: 100%;
+  }
+
+  .mobile-hide {
+    display: none !important;
+  }
+
+  .main-nav {
+    width: 100%;
+    margin-top: 5px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    padding-bottom: 8px; /* Room for scrollbar */
+    gap: 15px;
+  }
+
+  /* Hide scrollbar for a cleaner look but keep it scrollable */
+  .main-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .main-nav {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .main-nav a:not(.btn-primary-custom) {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .btn-primary-custom {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    white-space: nowrap;
+  }
+}

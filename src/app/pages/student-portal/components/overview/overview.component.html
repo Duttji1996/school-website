@@ -1,0 +1,70 @@
+<!-- OVERVIEW TAB -->
+<!-- Top Stats Grid -->
+<div class="stats-grid">
+  
+  <!-- Attendance Card -->
+  <div class="stat-card glass-card">
+    <div class="card-header">
+      <h3>Attendance</h3>
+      <span class="icon">📅</span>
+    </div>
+    <div class="stat-body">
+      <div class="percentage-circle" [style.--percent]="data.attendance.percentage + '%'">
+        <span>{{ data.attendance.percentage }}%</span>
+      </div>
+      <div class="stat-details">
+        <p><strong>Total Days:</strong> {{ data.attendance.totalDays }}</p>
+        <p style="color: var(--soft-green);"><strong>Present:</strong> {{ data.attendance.presentDays }}</p>
+        <p style="color: var(--vibrant-red);"><strong>Absent:</strong> {{ data.attendance.absentDays }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overall Progress Card -->
+  <div class="stat-card glass-card">
+    <div class="card-header">
+      <h3>Overall Progress</h3>
+      <span class="icon">📈</span>
+    </div>
+    <div class="stat-body progress-body">
+      <h1>{{ data.progress.overallPercentage }}%</h1>
+      <div class="progress-bar-container">
+        <div class="progress-fill" [style.width]="data.progress.overallPercentage + '%'"></div>
+      </div>
+      <p class="remarks">"{{ data.progress.remarks }}"</p>
+    </div>
+  </div>
+</div>
+
+<!-- Exams Section -->
+<div class="exams-section glass-card">
+  <h3>Recent Exam Results</h3>
+  <div class="table-responsive">
+    <table class="exam-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Subject</th>
+          <th>Obtained Marks</th>
+          <th>Total Marks</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (exam of data.recentExams; track exam.subject) {
+          <tr>
+            <td>{{ exam.date | date:'mediumDate' }}</td>
+            <td><strong>{{ exam.subject }}</strong></td>
+            <td>{{ exam.obtainedMarks }}</td>
+            <td>{{ exam.totalMarks }}</td>
+            <td>
+              <span class="grade-badge" [ngClass]="'grade-' + exam.grade.charAt(0).toLowerCase()">
+                {{ exam.grade }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,143 @@
+@if (!isLoggedIn) {
+  <div class="split-container">
+    <!-- LEFT SIDE -->
+    <div class="visual-side">
+      <div class="overlay-content">
+        <div class="badge" style="background: var(--sunny-yellow); color: var(--dark-slate); margin-bottom: 20px;">Student Portal</div>
+        <h2>Empowering the Next Generation of <span style="color: var(--sunny-yellow)">Leaders</span></h2>
+        <p>Access your classes, homework, and performance reports in one smart dashboard. Designed for your success.</p>
+        <div class="feature-list">
+          <p><i class="pi pi-check-circle"></i> Live Classes</p>
+          <p><i class="pi pi-check-circle"></i> Digital Library</p>
+          <p><i class="pi pi-check-circle"></i> Result Analytics</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="form-side">
+      <div class="auth-wrapper">
+        <div class="auth-header">
+          <div class="footer-logo" style="background: var(--sunny-yellow); color: var(--text-dark); padding: 12px 16px; font-weight: 900; border-radius: 8px; font-family: var(--font-heading); font-size: 1.4rem; display: inline-block; margin-bottom: 15px;">UDCS</div>
+          <h3>Student Login</h3>
+          <p>Login to your student dashboard</p>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form class="form-body" (submit)="handleLogin($event)">
+          <div class="input-field">
+            <label>Email Address</label>
+            <input type="email" placeholder="Enter your email" required />
+          </div>
+
+          <div class="input-field">
+            <label>Password</label>
+            <input type="password" placeholder="••••••••" required />
+          </div>
+
+          @if (loginError) {
+            <p style="color: red; font-size: 0.85rem; margin-top: -10px;">{{ loginError }}</p>
+          }
+
+          <button type="submit" class="action-btn" [disabled]="isLoading">
+            {{ isLoading ? 'Logging in...' : 'Login' }}
+          </button>
+
+          <p class="toggle-text">
+            Don't have an account?
+            <span (click)="openSignup()">Sign up</span>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNUP MODAL BACKDROP -->
+  <div
+    class="modal-backdrop"
+    *ngIf="showSignupPopup"
+    (click)="closeSignup()"
+  ></div>
+
+  <!-- SIGNUP MODAL -->
+  <div class="modal" *ngIf="showSignupPopup">
+    <div class="modal-content">
+      <button class="close-btn" (click)="closeSignup()">×</button>
+
+      <h3>Create Account</h3>
+      <p>Register with your basic details</p>
+
+      <div class="form-body">
+        <div class="input-field">
+          <label>Email ID</label>
+          <input type="email" placeholder="example&#64;email.com" />
+        </div>
+
+        <div class="input-field">
+          <label>Mobile Number</label>
+          <input type="tel" placeholder="+91 XXXXXXXXXX" />
+        </div>
+
+        <div class="input-field">
+          <label>Create Password</label>
+          <input type="password" placeholder="Choose a strong password" />
+        </div>
+
+        <button class="action-btn register-btn">Create Account</button>
+      </div>
+    </div>
+  </div>
+} @else {
+  <!-- DASHBOARD UI -->
+  <div class="dashboard-container">
+    
+    <!-- Dashboard Header -->
+    <header class="dashboard-header glass-card">
+      <div class="profile-section">
+        <img [src]="dashboardData?.profileImage || 'https://ui-avatars.com/api/?name=' + dashboardData?.studentName + '&background=fadb5f&color=0c1e33'" 
+             (error)="handleImageError($event)"
+             alt="Student Profile" 
+             class="profile-pic" />
+        <div>
+          <h2>Welcome back, {{ dashboardData?.studentName }}!</h2>
+          <p>ID: {{ dashboardData?.studentId }} | {{ dashboardData?.className }} - Section {{ dashboardData?.section }}</p>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </header>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="switchTab('overview')">Dashboard Overview</button>
+      <button class="tab-btn" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">Profile</button>
+      <button class="tab-btn" [class.active]="activeTab === 'homework'" (click)="switchTab('homework')">Homework</button>
+      <button class="tab-btn" [class.active]="activeTab === 'fees'" (click)="switchTab('fees')">Fees & Payments</button>
+      <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="switchTab('reviews')">Remarks & Reviews</button>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+      
+      @if (activeTab === 'overview' && dashboardData) {
+        <app-overview [data]="dashboardData"></app-overview>
+      }
+
+      @if (activeTab === 'profile' && dashboardData) {
+        <app-profile [data]="dashboardData"></app-profile>
+      }
+
+      @if (activeTab === 'homework' && dashboardData) {
+        <app-homework [data]="dashboardData"></app-homework>
+      }
+
+      @if (activeTab === 'fees' && dashboardData) {
+        <app-fees [data]="dashboardData"></app-fees>
+      }
+
+      @if (activeTab === 'reviews' && dashboardData) {
+        <app-reviews [data]="dashboardData"></app-reviews>
+      }
+
+    </div>
+  </div>
+}

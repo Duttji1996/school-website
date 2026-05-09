@@ -1,0 +1,244 @@
+/* =========================================
+   FEES AND PAYMENTS TAB
+   ========================================= */
+.fees-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fees-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.fee-card {
+  padding: 25px;
+  border-radius: 15px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.total-card {
+  background: linear-gradient(135deg, var(--primary-blue), #2575fc);
+}
+
+.paid-card {
+  background: linear-gradient(135deg, var(--soft-green), #38bdf8);
+}
+
+.pending-card {
+  background: linear-gradient(135deg, var(--vibrant-red), #f59e0b);
+}
+
+.fee-card p {
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.fee-card h2 {
+  font-size: 2rem;
+  margin: 0;
+  font-family: var(--font-heading);
+}
+
+.pay-btn {
+  margin-top: 15px;
+  background: white !important;
+  color: var(--vibrant-red) !important;
+  font-weight: 800;
+  align-self: flex-start;
+  padding: 8px 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+}
+
+.pay-btn:hover {
+  background: var(--sunny-yellow) !important;
+  color: var(--text-dark) !important;
+}
+
+.clear-badge {
+  margin-top: 15px;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+}
+
+/* =========================================
+   PAYMENT MODAL
+   ========================================= */
+.payment-modal .modal-content {
+  max-width: 450px;
+  border-top-color: var(--primary-blue);
+  text-align: center;
+}
+
+.payment-modal h3 {
+  margin-top: 10px;
+}
+
+.payment-modal .form-body {
+  text-align: left;
+}
+
+.pay-submit-btn {
+  background: var(--soft-green);
+  width: 100%;
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+.pay-submit-btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.success-alert {
+  background: rgba(106, 184, 27, 0.15);
+  color: #166534;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 600;
+  border: 1px solid var(--soft-green);
+  animation: slideDown 0.3s ease;
+}
+
+/* Exams Section used for Payment History */
+.exams-section {
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.exams-section h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.exam-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.exam-table th, .exam-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.exam-table th {
+  background: rgba(74, 144, 226, 0.1);
+  color: var(--primary-blue);
+  font-weight: 700;
+}
+
+.exam-table td {
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; background: rgba(0,0,0,0.05); }
+.status-badge.success-badge { background: rgba(106, 184, 27, 0.2); color: var(--soft-green); }
+
+/* Copy input field styles for modal */
+.input-field {
+  margin-bottom: 18px;
+}
+
+.input-field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: 0.3s;
+}
+
+.action-btn {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.95rem;
+  width: 100%;
+  transition: 0.3s ease;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  border-radius: 18px;
+  position: relative;
+  animation: popup 0.3s ease;
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  border: none;
+  background: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+@keyframes popup {
+  from {
+    transform: translateY(-15px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
