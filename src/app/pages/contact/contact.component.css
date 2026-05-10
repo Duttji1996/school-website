@@ -248,3 +248,18 @@
     font-size: 2.5rem;
   }
 }
+
+@media (max-width: 600px) {
+  .form-container {
+    padding: 30px 20px;
+  }
+  .map-overlay {
+    padding: 30px 20px;
+  }
+  .contact-hero {
+    padding: 100px 10px 60px;
+  }
+  .contact-hero h1 {
+    font-size: 2rem;
+  }
+}

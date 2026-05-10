@@ -390,3 +390,76 @@
 
 .img-1 { grid-row: span 2; }
 .grid-img:hover { transform: scale(1.05); z-index: 2; }
+
+/* =========================================
+   MOBILE RESPONSIVE FIX
+   ========================================= */
+@media (max-width: 992px) {
+  .school-title {
+    font-size: 3rem;
+  }
+  .split-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .founder-card {
+    grid-template-columns: 1fr;
+    padding: 30px;
+    gap: 30px;
+  }
+  .founder-img {
+    height: 350px;
+  }
+  .cta-content h2 {
+    font-size: 2.5rem;
+  }
+  .experience-card {
+    right: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 80px 0 60px;
+  }
+  .school-title {
+    font-size: 2.2rem;
+  }
+  .section-heading {
+    font-size: 2rem;
+  }
+  .main-img {
+    width: 100%;
+    height: 300px;
+  }
+  .sub-img {
+    display: none; /* Hide sub image on very small screens to save space */
+  }
+  .visual-col .image-stack {
+    height: 300px;
+  }
+  .experience-card {
+    top: auto;
+    bottom: -20px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+  .image-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .grid-img {
+    height: 250px;
+  }
+  .img-1 { grid-row: auto; }
+  .values-card-grid {
+    grid-template-columns: 1fr;
+  }
+  .cta-content {
+    padding: 60px 20px;
+    text-align: center;
+  }
+  .cta-content h2 {
+    font-size: 2rem;
+  }
+}

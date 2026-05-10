@@ -4,6 +4,9 @@
   padding: 15px 0;
   transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .header-container {
@@ -94,23 +97,21 @@
 /* =========================================
    MOBILE RESPONSIVE ADDITION
    ========================================= */
+.mobile-only {
+  display: none;
+}
+
 @media (max-width: 992px) {
   .main-header {
     padding: 12px 0;
   }
 
   .header-container {
-    flex-direction: column; /* Stack logo/title and nav */
-    align-items: center;
-    gap: 12px;
+    flex-wrap: wrap;
   }
 
   .brand-section {
-    flex-direction: column; /* Stack logo and title */
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    gap: 8px;
+    flex: 1;
   }
 
   .school-logo {
@@ -129,34 +130,85 @@
     display: none !important;
   }
 
-  .main-nav {
+  .mobile-only {
+    display: flex;
+  }
+
+  /* Hamburger Button */
+  .hamburger-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 24px;
+    width: 30px;
+    padding: 0;
+    z-index: 1001; /* Above menu */
+  }
+
+  .hamburger-line {
     width: 100%;
-    margin-top: 5px;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    padding-bottom: 8px; /* Room for scrollbar */
+    height: 3px;
+    background: #f8fafc;
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    transform-origin: 1px;
+  }
+
+  .hamburger-line.open:nth-child(1) {
+    transform: rotate(45deg);
+  }
+
+  .hamburger-line.open:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-line.open:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+
+  /* Navigation Overlay Menu */
+  .main-nav {
+    display: none; /* Hide by default on mobile */
+    flex-direction: column;
+    width: 100%;
+    background: #1e293b;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     gap: 15px;
   }
 
-  /* Hide scrollbar for a cleaner look but keep it scrollable */
-  .main-nav::-webkit-scrollbar {
-    display: none;
+  .main-nav.menu-open {
+    display: flex;
+    animation: slideDown 0.3s ease forwards;
   }
-  .main-nav {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .main-nav a:not(.btn-primary-custom) {
-    font-size: 14px;
-    white-space: nowrap;
+    font-size: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: block;
+    width: 100%;
   }
 
-  .btn-primary-custom {
-    padding: 6px 12px !important;
-    font-size: 13px !important;
-    white-space: nowrap;
+  .main-nav a:not(.btn-primary-custom)::after {
+    display: none; /* remove hover lines on mobile */
+  }
+
+  .portal-btn-mobile {
+    margin-top: 10px;
+    text-align: center;
+    padding: 12px !important;
+    display: block;
   }
 }

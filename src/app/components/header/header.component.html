@@ -1,22 +1,11 @@
-<section
-  class="header-wrapper"
-  style="
-    padding: 0;
-    margin: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 100;
-  "
->
+<section class="header-wrapper">
   <!-- MAIN HEADER -->
   <header class="main-header">
     <div class="header-container">
       <!-- LEFT LOGO + TITLE -->
       <div class="brand-section">
         <div class="school-logo">UDCS</div>
-        <div>
+        <div class="header-text-container">
           <h2 class="header-title" style="margin-bottom: 2px">
             <strong>Usha Devi Convent School</strong>
           </h2>
@@ -34,17 +23,25 @@
         </div>
       </div>
 
+      <!-- HAMBURGER MENU BUTTON -->
+      <button class="hamburger-btn mobile-only" (click)="toggleMenu()">
+        <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+        <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+        <span class="hamburger-line" [class.open]="isMenuOpen"></span>
+      </button>
+
       <!-- NAVIGATION -->
-      <nav class="main-nav">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-        <a routerLink="/about" routerLinkActive="active">About Us</a>
-        <a routerLink="/institute" routerLinkActive="active">Institute</a>
-        <a routerLink="/gallery" routerLinkActive="active">Gallery</a>
-        <a routerLink="/contact" routerLinkActive="active">Contact</a>
+      <nav class="main-nav" [class.menu-open]="isMenuOpen">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
+        <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About Us</a>
+        <a routerLink="/institute" routerLinkActive="active" (click)="closeMenu()">Institute</a>
+        <a routerLink="/gallery" routerLinkActive="active" (click)="closeMenu()">Gallery</a>
+        <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a>
         <a
           routerLink="/portal"
-          class="btn-primary-custom"
+          class="btn-primary-custom portal-btn-mobile"
           style="text-transform: none; font-size: 14px"
+          (click)="closeMenu()"
           >Student Portal</a
         >
       </nav>

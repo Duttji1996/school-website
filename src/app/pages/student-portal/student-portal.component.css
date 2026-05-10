@@ -325,15 +325,17 @@
 }
 
 @media (max-width: 1024px) {
-  .split-container { flex-direction: column; }
-  .visual-side { min-height: 300px; }
+  .split-container { grid-template-columns: 1fr; }
+  .visual-side { min-height: 300px; padding: 40px; }
   .form-side { padding: 40px 20px; }
+  .overlay-content h2 { font-size: 2.5rem; }
 }
 
 @media (max-width: 768px) {
-  .dashboard-header { flex-direction: column; text-align: center; }
+  .dashboard-header { flex-direction: column; text-align: center; gap: 20px; }
   .profile-section { flex-direction: column; }
   .visual-side { display: none; }
+  .dashboard-container { padding: 100px 10px 40px; }
 }
 
 
