@@ -178,7 +178,7 @@ export interface AdminDashboardData {
 })
 export class SchoolApiService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:3000'; // Fallback to localhost for development 'https://school-backend-1aac.onrender.com' ??
+  private baseUrl = "https://school-backend-1aac.onrender.com" //'http://localhost:3000'; // Fallback to localhost for development 'https://school-backend-1aac.onrender.com' ??
 
   constructor() {}
 
