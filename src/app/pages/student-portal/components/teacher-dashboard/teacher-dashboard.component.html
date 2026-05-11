@@ -1,0 +1,141 @@
+<div class="teacher-wrapper">
+  <!-- MINI STATS -->
+  <div class="mini-stats">
+    <div class="glass-card stat-box">
+      <p>My Attendance</p>
+      <h2>{{ data.attendance }}%</h2>
+    </div>
+    <div class="glass-card stat-box">
+      <p>Total Students</p>
+      <h2>{{ data.myStudents.length }}</h2>
+    </div>
+    <div class="glass-card stat-box">
+      <p>Current Salary</p>
+      <h2>₹{{ data.salary | number }}</h2>
+    </div>
+    <div class="glass-card stat-box highlight">
+      <p>Last Credited</p>
+      <h2>{{ data.lastSalaryCredited | date:'mediumDate' }}</h2>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="tab-nav">
+    <button [class.active]="activeTab === 'overview'" (click)="switchTab('overview')"><i class="pi pi-th-large"></i> Dashboard</button>
+    <button [class.active]="activeTab === 'students'" (click)="switchTab('students')"><i class="pi pi-users"></i> My Students</button>
+    <button [class.active]="activeTab === 'homework'" (click)="switchTab('homework')"><i class="pi pi-book"></i> Homework Manager</button>
+    <button [class.active]="activeTab === 'stats'" (click)="switchTab('stats')"><i class="pi pi-wallet"></i> My Payroll</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    
+    <!-- DASHBOARD -->
+    <div *ngIf="activeTab === 'overview'" class="fade-in">
+      <div class="grid-2">
+        <div class="glass-card panel">
+          <h3>Current Class Status</h3>
+          <div class="status-summary">
+            <div class="sum-item">
+              <span>Class</span>
+              <strong>4 - A</strong>
+            </div>
+            <div class="sum-item">
+              <span>Present Today</span>
+              <strong>18 / 20</strong>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card panel">
+          <h3>Quick Note</h3>
+          <p class="note">Next Parent-Teacher meeting scheduled for Saturday. Please prepare your student progress reports by Thursday.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY STUDENTS -->
+    <div *ngIf="activeTab === 'students'" class="fade-in">
+      <div class="glass-card panel">
+        <h3>Class List (4-A)</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of data.myStudents">
+                <td>{{ s.name }}</td>
+                <td><span class="badge active">{{ s.status }}</span></td>
+                <td>
+                  <button (click)="handleGiveReview(s.name)" class="btn-review">Add Remark</button>
+                  <button class="btn-attd">Mark Attd.</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOMEWORK MANAGER -->
+    <div *ngIf="activeTab === 'homework'" class="fade-in">
+      <div class="grid-2">
+        <div class="glass-card panel">
+          <h3>Assign New Task</h3>
+          <form (submit)="handlePostHomework()">
+            <div class="field">
+              <label>Topic / Title</label>
+              <input type="text" [(ngModel)]="newHomework.title" name="title" placeholder="e.g. Algebra Basics" required />
+            </div>
+            <div class="field">
+              <label>Due Date</label>
+              <input type="date" [(ngModel)]="newHomework.dueDate" name="dueDate" required />
+            </div>
+            <button type="submit" class="action-btn" [disabled]="isProcessing">Assign to Class</button>
+          </form>
+        </div>
+        <div class="glass-card panel">
+          <h3>Recent Assignments</h3>
+          <div class="hw-list">
+            <div class="hw-card" *ngFor="let h of data.myHomeworks">
+              <h4>{{ h.title }}</h4>
+              <p>Due: {{ h.dueDate | date }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY PAYROLL -->
+    <div *ngIf="activeTab === 'stats'" class="fade-in">
+      <div class="glass-card panel">
+        <h3>Payment History</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of data.salaryHistory">
+                <td>{{ p.date | date:'MMMM yyyy' }}</td>
+                <td>₹{{ p.amount | number }}</td>
+                <td>{{ p.method }}</td>
+                <td><span class="badge success">Paid</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -332,10 +332,35 @@
 }
 
 @media (max-width: 768px) {
-  .dashboard-header { flex-direction: column; text-align: center; gap: 20px; }
+  .dashboard-header { 
+    flex-direction: column; 
+    text-align: center; 
+    gap: 20px; 
+    padding: 20px;
+  }
   .profile-section { flex-direction: column; }
   .visual-side { display: none; }
   .dashboard-container { padding: 100px 10px 40px; }
+  
+  .tab-navigation {
+    padding: 0 10px 15px;
+  }
+  
+  .tab-btn {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+  }
+
+  .auth-wrapper {
+    padding: 25px;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h2 { font-size: 1.4rem; }
+  .profile-pic { width: 70px; height: 70px; }
+  .auth-header h3 { font-size: 1.5rem; }
 }
 
 

@@ -1,0 +1,49 @@
+<div class="attendance-container">
+  <div class="calendar-section glass-card">
+    <div class="calendar-header">
+      <button class="nav-btn" (click)="prevMonth()"><i class="pi pi-chevron-left"></i></button>
+      <h2>{{ monthName }} {{ year }}</h2>
+      <button class="nav-btn" (click)="nextMonth()"><i class="pi pi-chevron-right"></i></button>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
+      <div class="day" 
+           *ngFor="let day of calendarDays" 
+           [class.not-current]="!day.isCurrentMonth"
+           [class.present]="day.status === 'present'"
+           [class.absent]="day.status === 'absent'"
+           [class.holiday]="day.status === 'holiday'"
+           [class.sunday]="day.status === 'sunday'"
+           [title]="day.holidayName || ''">
+        <span>{{ day.date.getDate() }}</span>
+        <div class="status-dot" *ngIf="day.status"></div>
+      </div>
+    </div>
+
+    <div class="calendar-legend">
+      <div class="legend-item"><span class="dot present"></span> Present</div>
+      <div class="legend-item"><span class="dot absent"></span> Absent</div>
+      <div class="legend-item"><span class="dot holiday"></span> Holiday</div>
+      <div class="legend-item"><span class="dot sunday"></span> Sunday</div>
+    </div>
+  </div>
+
+  <div class="holidays-section glass-card">
+    <div class="section-header">
+      <h3><i class="pi pi-calendar-plus"></i> Public Holidays 2026</h3>
+    </div>
+    <div class="holiday-list">
+      <div class="holiday-item" *ngFor="let holiday of data.holidayCalendar">
+        <div class="holiday-date">
+          <span class="day">{{ holiday.date | date:'dd' }}</span>
+          <span class="month">{{ holiday.date | date:'MMM' }}</span>
+        </div>
+        <div class="holiday-info">
+          <h4>{{ holiday.name }}</h4>
+          <p>{{ holiday.date | date:'fullDate' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

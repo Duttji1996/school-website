@@ -1,0 +1,402 @@
+<div class="admin-wrapper">
+  <!-- STATS HEADER -->
+  <div class="admin-stats-grid">
+    <div class="stat-card glass-card">
+      <i class="pi pi-users icon-blue"></i>
+      <div class="stat-info">
+        <p>Total Students</p>
+        <h3>{{ data.totalStudents }}</h3>
+      </div>
+    </div>
+    <div class="stat-card glass-card">
+      <i class="pi pi-briefcase icon-yellow"></i>
+      <div class="stat-info">
+        <p>Total Staff</p>
+        <h3>{{ data.totalTeachers }}</h3>
+      </div>
+    </div>
+    <div class="stat-card glass-card">
+      <i class="pi pi-wallet icon-green"></i>
+      <div class="stat-info">
+        <p>Fees Collected</p>
+        <h3>₹{{ data.totalFeesCollected | number }}</h3>
+      </div>
+    </div>
+    <div class="stat-card glass-card">
+      <i class="pi pi-exclamation-circle icon-red"></i>
+      <div class="stat-info">
+        <p>Pending Dues</p>
+        <h3>₹{{ data.pendingFees | number }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="admin-nav glass-card">
+    <button [class.active]="activeTab === 'overview'" (click)="switchTab('overview')"><i class="pi pi-chart-bar"></i> Overview</button>
+    <button [class.active]="activeTab === 'students'" (click)="switchTab('students')"><i class="pi pi-user-plus"></i> Student Management</button>
+    <button [class.active]="activeTab === 'teachers'" (click)="switchTab('teachers')"><i class="pi pi-id-card"></i> Staff Directory</button>
+    <button [class.active]="activeTab === 'fees'" (click)="switchTab('fees')"><i class="pi pi-cog"></i> Fee Structure</button>
+    <button [class.active]="activeTab === 'payroll'" (click)="switchTab('payroll')"><i class="pi pi-money-bill"></i> Payroll</button>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="admin-content">
+    
+    <!-- OVERVIEW -->
+    <div *ngIf="activeTab === 'overview'" class="tab-pane fade-in">
+      <div class="grid-2">
+        <div class="glass-card panel">
+          <h3>Recent Activity</h3>
+          <div class="activity-list">
+            <p><i class="pi pi-plus-circle icon-green"></i> New student registration from Class 2</p>
+            <p><i class="pi pi-check-circle icon-blue"></i> Salary processed for 12 staff members</p>
+            <p><i class="pi pi-info-circle icon-yellow"></i> Fee structure updated for Class 5</p>
+          </div>
+        </div>
+        <div class="glass-card panel">
+          <h3>Financial Health</h3>
+          <div class="progress-box">
+            <p>Collection Goal (May)</p>
+            <div class="progress-bar"><div class="fill" style="width: 75%"></div></div>
+            <span>75% Achieved</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENT MANAGEMENT -->
+    <div *ngIf="activeTab === 'students' && !selectedStudent" class="tab-pane fade-in">
+      
+      <!-- LIST VIEW -->
+      <div *ngIf="viewMode === 'list'" class="glass-card panel list-page">
+        <div class="panel-header">
+          <div class="header-left">
+            <h3>Student Database</h3>
+            <p class="subtitle">Managing {{ data.students.length }} enrolled students</p>
+          </div>
+          <div class="header-right">
+            <div class="filter-row">
+              <div class="search-box">
+                <i class="pi pi-search"></i>
+                <input type="text" placeholder="Search students..." [(ngModel)]="searchText" />
+              </div>
+              <button class="action-btn-sm" (click)="showAddStudent()">
+                <i class="pi pi-plus"></i> Add Student
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name & Email</th>
+                <th>Class & Section</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of data.students">
+                <ng-container *ngIf="(selectedFilterClass === 'All' || s.className === selectedFilterClass) && (!searchText || s.name.toLowerCase().includes(searchText.toLowerCase()) || s.id.includes(searchText))">
+                  <td class="id-col">#{{ s.id.slice(0, 8) }}</td>
+                  <td>
+                    <div class="name-cell">
+                      <strong>{{ s.name }}</strong>
+                      <span>{{ s.email }}</span>
+                    </div>
+                  </td>
+                  <td>Class {{ s.className }} - {{ s.section }}</td>
+                  <td><span class="badge" [class]="s.status">{{ s.status }}</span></td>
+                  <td class="action-cell">
+                    <button class="btn-edit" (click)="handleEditStudent(s)">Edit</button>
+                    <button class="btn-view" (click)="handleViewStudent(s)">View</button>
+                  </td>
+                </ng-container>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FORM VIEW -->
+      <div *ngIf="viewMode === 'form'" class="glass-card panel form-page fade-in">
+        <div class="panel-header">
+          <div class="header-left">
+            <button class="back-link" (click)="viewMode = 'list'">
+              <span>&larr;</span> Back to Database
+            </button>
+            <h3>{{ isEditing ? 'Update Student Profile' : 'Enroll New Student' }}</h3>
+          </div>
+        </div>
+
+        <form (submit)="handleRegisterStudent()" class="multi-step-form">
+          <div class="form-section">
+            <h4><i class="pi pi-user"></i> Basic Information</h4>
+            <div class="input-row">
+              <div class="field">
+                <label>Full Name *</label>
+                <input type="text" placeholder="Full Name" [(ngModel)]="newStudent.name" name="sName" required />
+              </div>
+              <div class="field">
+                <label>Email Address *</label>
+                <input type="email" placeholder="Email" [(ngModel)]="newStudent.email" name="sEmail" required />
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="field">
+                <label>Class *</label>
+                <select [(ngModel)]="newStudent.className" name="sClass" required>
+                  <option *ngFor="let c of availableClasses" [value]="c">Class {{ c }}</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Section *</label>
+                <select [(ngModel)]="newStudent.section" name="sSection" required>
+                  <option *ngFor="let s of availableSections" [value]="s">Section {{ s }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4><i class="pi pi-id-card"></i> Personal Details</h4>
+            <div class="input-row">
+              <div class="field">
+                <label>Date of Birth *</label>
+                <input type="date" [(ngModel)]="newStudent.dob" name="sDob" [max]="maxDob" required />
+              </div>
+              <div class="field">
+                <label>Gender</label>
+                <select [(ngModel)]="newStudent.gender" name="sGender">
+                  <option value="">Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Blood Group</label>
+                <select [(ngModel)]="newStudent.bloodGroup" name="sBlood">
+                  <option value="">Select</option>
+                  <option *ngFor="let bg of ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']" [value]="bg">{{bg}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="field">
+                <label>Aadhar ID *</label>
+                <input type="text" placeholder="12-digit number" [(ngModel)]="newStudent.aadharId" name="sAadhar" required />
+              </div>
+              <div class="field">
+                <label>Mobile Number *</label>
+                <input type="text" placeholder="Contact No" [(ngModel)]="newStudent.contactNo" name="sContact" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4><i class="pi pi-users"></i> Family Details</h4>
+            <div class="input-row">
+              <div class="field">
+                <label>Father's Name</label>
+                <input type="text" [(ngModel)]="newStudent.fatherName" name="sFather" />
+              </div>
+              <div class="field">
+                <label>Mother's Name</label>
+                <input type="text" [(ngModel)]="newStudent.motherName" name="sMother" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section full-width">
+            <h4><i class="pi pi-map-marker"></i> Residential Address</h4>
+            <textarea placeholder="Address" [(ngModel)]="newStudent.address" name="sAddress"></textarea>
+          </div>
+
+          <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="viewMode = 'list'">Cancel</button>
+            <button type="submit" class="action-btn" [disabled]="isProcessing">
+              <span *ngIf="!isProcessing">{{ isEditing ? 'Save Changes' : 'Enroll Student' }}</span>
+              <span *ngIf="isProcessing"><i class="pi pi-spin pi-spinner"></i> Processing...</span>
+            </button>
+          </div>
+          <p *ngIf="successMessage" class="success-txt">{{ successMessage }}</p>
+        </form>
+      </div>
+    </div>
+
+
+    <!-- TEACHER MANAGEMENT -->
+    <div *ngIf="activeTab === 'teachers'" class="tab-pane fade-in">
+      <div class="grid-layout">
+        <div class="glass-card panel">
+          <h3>Register New Teacher</h3>
+          <form (submit)="handleRegisterTeacher()">
+            <div class="input-row">
+              <input type="text" placeholder="Full Name" [(ngModel)]="newTeacher.name" name="name" required />
+              <input type="email" placeholder="Email" [(ngModel)]="newTeacher.email" name="email" required />
+            </div>
+            <div class="input-row">
+              <input type="text" placeholder="Subject" [(ngModel)]="newTeacher.subject" name="subject" required />
+              <input type="number" placeholder="Base Salary" [(ngModel)]="newTeacher.salary" name="salary" required />
+            </div>
+            <button type="submit" class="action-btn" [disabled]="isProcessing">
+              <span *ngIf="!isProcessing">Register Staff</span>
+              <span *ngIf="isProcessing"><i class="pi pi-spin pi-spinner"></i> Saving...</span>
+            </button>
+            <p *ngIf="successMessage" class="success-txt">{{ successMessage }}</p>
+          </form>
+        </div>
+        
+        <div class="glass-card panel">
+          <h3>Staff List</h3>
+          <div class="teacher-list-scroll">
+            <div class="teacher-item" *ngFor="let t of data.teachers">
+              <div class="t-info">
+                <strong>{{ t.name }}</strong>
+                <p>{{ t.subject }} | {{ t.email }}</p>
+              </div>
+              <span class="t-attendance">{{ t.attendance }}% Attd.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEE STRUCTURE -->
+    <div *ngIf="activeTab === 'fees'" class="tab-pane fade-in">
+      <div class="glass-card panel">
+        <h3>Class-wise Fee Configuration</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Monthly Fee</th>
+                <th>Annual Fee</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let f of data.feeStructures">
+                <td>{{ f.className }}</td>
+                <td>₹{{ f.monthlyFee }}</td>
+                <td>₹{{ f.annualFee }}</td>
+                <td><button class="btn-edit">Update</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYROLL -->
+    <div *ngIf="activeTab === 'payroll'" class="tab-pane fade-in">
+      <div class="glass-card panel">
+        <h3>Staff Payroll Management</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Staff Name</th>
+                <th>Designation</th>
+                <th>Current Salary</th>
+                <th>Attendance</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of data.teachers">
+                <td>{{ t.name }}</td>
+                <td>{{ t.subject }}</td>
+                <td>₹{{ t.salary | number }}</td>
+                <td>{{ t.attendance }}%</td>
+                <td>
+                  <button (click)="handlePaySalary(t.id, t.salary)" class="btn-pay">Credit Salary</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FULL STUDENT PROFILE PAGE (Replaces Modal) -->
+  <div *ngIf="selectedStudent" class="full-profile-page fade-in">
+    <div class="page-header">
+      <button class="back-btn" (click)="selectedStudent = null">
+        <i class="pi pi-arrow-left"></i> Back to Dashboard
+      </button>
+      <div class="header-actions">
+        <button class="btn-approve" (click)="handleEditStudent(selectedStudent); selectedStudent = null">Edit Profile</button>
+      </div>
+    </div>
+
+    <div class="profile-layout">
+      <!-- Left Card: Identity -->
+      <div class="glass-card id-card">
+        <div class="avatar-circle">
+          {{ selectedStudent.name.charAt(0) }}
+        </div>
+        <h2>{{ selectedStudent.name }}</h2>
+        <p class="subtitle">Roll No: {{ selectedStudent.rollNo || selectedStudent.rollNumber }}</p>
+        <div class="status-tags">
+          <span class="badge" [class]="selectedStudent.status">{{ selectedStudent.status }}</span>
+          <span class="badge fee" [class]="selectedStudent.feeStatus === 'Paid' ? 'active' : 'pending'">{{ selectedStudent.feeStatus }} Fees</span>
+        </div>
+      </div>
+
+      <!-- Right Card: Details -->
+      <div class="glass-card info-panel">
+        <div class="info-section">
+          <h3><i class="pi pi-user"></i> Personal Information</h3>
+          <div class="info-grid">
+            <div class="info-item"><label>Date of Birth</label><span>{{ selectedStudent.dob }}</span></div>
+            <div class="info-item"><label>Gender</label><span>{{ selectedStudent.gender }}</span></div>
+            <div class="info-item"><label>Blood Group</label><span>{{ selectedStudent.bloodGroup || 'N/A' }}</span></div>
+            <div class="info-item"><label>Aadhar ID</label><span>{{ selectedStudent.aadharId || 'N/A' }}</span></div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3><i class="pi pi-users"></i> Family Details</h3>
+          <div class="info-grid">
+            <div class="info-item"><label>Father's Name</label><span>{{ selectedStudent.fatherName }}</span></div>
+            <div class="info-item"><label>Mother's Name</label><span>{{ selectedStudent.motherName || 'N/A' }}</span></div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3><i class="pi pi-id-card"></i> Academic & Contact</h3>
+          <div class="info-grid">
+            <div class="info-item"><label>Class & Section</label><span>Class {{ selectedStudent.className }} - {{ selectedStudent.section }}</span></div>
+            <div class="info-item"><label>Admission Date</label><span>{{ selectedStudent.admissionDate || 'N/A' }}</span></div>
+            <div class="info-item"><label>Contact Number</label><span>{{ selectedStudent.contactNo }}</span></div>
+            <div class="info-item"><label>Email Address</label><span>{{ selectedStudent.email }}</span></div>
+          </div>
+        </div>
+
+        <div class="info-section full-width">
+          <h3><i class="pi pi-map-marker"></i> Residential Address</h3>
+          <p class="address-text">{{ selectedStudent.address }}</p>
+        </div>
+
+        <div class="info-section stats-section">
+          <div class="stat-card">
+            <label>Attendance</label>
+            <div class="stat-value">{{ selectedStudent.attendance }}%</div>
+          </div>
+          <div class="stat-card">
+            <label>Academic Standing</label>
+            <div class="stat-value">Excellent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

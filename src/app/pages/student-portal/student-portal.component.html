@@ -3,13 +3,13 @@
     <!-- LEFT SIDE -->
     <div class="visual-side">
       <div class="overlay-content">
-        <div class="badge" style="background: var(--sunny-yellow); color: var(--dark-slate); margin-bottom: 20px;">Student Portal</div>
-        <h2>Empowering the Next Generation of <span style="color: var(--sunny-yellow)">Leaders</span></h2>
-        <p>Access your classes, homework, and performance reports in one smart dashboard. Designed for your success.</p>
+        <div class="badge" style="background: var(--sunny-yellow); color: var(--dark-slate); margin-bottom: 20px;">Portal Entry</div>
+        <h2>Integrated School <span style="color: var(--sunny-yellow)">Management</span> System</h2>
+        <p>A unified platform for students, teachers, and administrators to collaborate and manage school operations seamlessly.</p>
         <div class="feature-list">
-          <p><i class="pi pi-check-circle"></i> Live Classes</p>
-          <p><i class="pi pi-check-circle"></i> Digital Library</p>
-          <p><i class="pi pi-check-circle"></i> Result Analytics</p>
+          <p><i class="pi pi-check-circle"></i> Admin Panel</p>
+          <p><i class="pi pi-check-circle"></i> Staff Portal</p>
+          <p><i class="pi pi-check-circle"></i> Student Dashboard</p>
         </div>
       </div>
     </div>
@@ -19,20 +19,20 @@
       <div class="auth-wrapper">
         <div class="auth-header">
           <div class="footer-logo" style="background: var(--sunny-yellow); color: var(--text-dark); padding: 12px 16px; font-weight: 900; border-radius: 8px; font-family: var(--font-heading); font-size: 1.4rem; display: inline-block; margin-bottom: 15px;">UDCS</div>
-          <h3>Student Login</h3>
-          <p>Login to your student dashboard</p>
+          <h3>UDCS Portal</h3>
+          <p>Sign in to access your dashboard</p>
         </div>
 
         <!-- LOGIN FORM -->
         <form class="form-body" (submit)="handleLogin($event)">
           <div class="input-field">
-            <label>Email Address</label>
-            <input type="email" placeholder="Enter your email" required />
+            <label>Email ID</label>
+            <input type="email" placeholder="Enter your registered email" [(ngModel)]="email" name="email" required />
           </div>
 
           <div class="input-field">
             <label>Password</label>
-            <input type="password" placeholder="••••••••" required />
+            <input type="password" placeholder="••••••••" [(ngModel)]="password" name="password" required />
           </div>
 
           @if (loginError) {
@@ -40,51 +40,32 @@
           }
 
           <button type="submit" class="action-btn" [disabled]="isLoading">
-            {{ isLoading ? 'Logging in...' : 'Login' }}
+            {{ isLoading ? 'Verifying...' : 'Sign In' }}
           </button>
 
           <p class="toggle-text">
-            Don't have an account?
-            <span (click)="openSignup()">Sign up</span>
+            Forgot password?
+            <span (click)="openSignup()">Get help</span>
           </p>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- SIGNUP MODAL BACKDROP -->
+  <!-- HELP MODAL BACKDROP -->
   <div
     class="modal-backdrop"
     *ngIf="showSignupPopup"
     (click)="closeSignup()"
   ></div>
 
-  <!-- SIGNUP MODAL -->
+  <!-- HELP MODAL -->
   <div class="modal" *ngIf="showSignupPopup">
     <div class="modal-content">
       <button class="close-btn" (click)="closeSignup()">×</button>
-
-      <h3>Create Account</h3>
-      <p>Register with your basic details</p>
-
-      <div class="form-body">
-        <div class="input-field">
-          <label>Email ID</label>
-          <input type="email" placeholder="example&#64;email.com" />
-        </div>
-
-        <div class="input-field">
-          <label>Mobile Number</label>
-          <input type="tel" placeholder="+91 XXXXXXXXXX" />
-        </div>
-
-        <div class="input-field">
-          <label>Create Password</label>
-          <input type="password" placeholder="Choose a strong password" />
-        </div>
-
-        <button class="action-btn register-btn">Create Account</button>
-      </div>
+      <h3>Portal Support</h3>
+      <p>If you have forgotten your password or are unable to login, please contact the IT Administrator or your Class Teacher for assistance.</p>
+      <button class="action-btn" (click)="closeSignup()">Okay, Got it</button>
     </div>
   </div>
 } @else {
@@ -94,48 +75,52 @@
     <!-- Dashboard Header -->
     <header class="dashboard-header glass-card">
       <div class="profile-section">
-        <img [src]="dashboardData?.profileImage || 'https://ui-avatars.com/api/?name=' + dashboardData?.studentName + '&background=fadb5f&color=0c1e33'" 
+        <img [src]="studentData?.profileImage || 'https://ui-avatars.com/api/?name=' + (studentData?.studentName || teacherData?.teacherName || 'Admin') + '&background=fadb5f&color=0c1e33'" 
              (error)="handleImageError($event)"
-             alt="Student Profile" 
+             alt="Profile" 
              class="profile-pic" />
         <div>
-          <h2>Welcome back, {{ dashboardData?.studentName }}!</h2>
-          <p>ID: {{ dashboardData?.studentId }} | {{ dashboardData?.className }} - Section {{ dashboardData?.section }}</p>
+          <h2>Welcome back, {{ studentData?.studentName || teacherData?.teacherName || 'Administrator' }}!</h2>
+          <p *ngIf="userRole === 'student'">Student ID: {{ studentData?.userId }} | {{ studentData?.className }} - {{ studentData?.section }}</p>
+          <p *ngIf="userRole === 'teacher'">Staff Portal | Subject: {{ teacherData?.subject }}</p>
+          <p *ngIf="userRole === 'admin'">Super Admin | Usha Devi Convent School Control Center</p>
         </div>
       </div>
       <button class="logout-btn" (click)="logout()">Logout</button>
     </header>
 
-    <!-- Tab Navigation -->
-    <div class="tab-navigation">
-      <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="switchTab('overview')">Dashboard Overview</button>
-      <button class="tab-btn" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">Profile</button>
-      <button class="tab-btn" [class.active]="activeTab === 'homework'" (click)="switchTab('homework')">Homework</button>
-      <button class="tab-btn" [class.active]="activeTab === 'fees'" (click)="switchTab('fees')">Fees & Payments</button>
-      <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="switchTab('reviews')">Remarks & Reviews</button>
-    </div>
-
-    <!-- Dashboard Content -->
-    <div class="dashboard-content">
+    <!-- CONTENT AREA BASED ON ROLE -->
+    <div class="portal-main-content">
       
-      @if (activeTab === 'overview' && dashboardData) {
-        <app-overview [data]="dashboardData"></app-overview>
+      <!-- ADMIN VIEW -->
+      @if (userRole === 'admin' && adminData) {
+        <app-admin-dashboard [data]="adminData"></app-admin-dashboard>
       }
 
-      @if (activeTab === 'profile' && dashboardData) {
-        <app-profile [data]="dashboardData"></app-profile>
+      <!-- TEACHER VIEW -->
+      @if (userRole === 'teacher' && teacherData) {
+        <app-teacher-dashboard [data]="teacherData"></app-teacher-dashboard>
       }
 
-      @if (activeTab === 'homework' && dashboardData) {
-        <app-homework [data]="dashboardData"></app-homework>
-      }
+      <!-- STUDENT VIEW -->
+      @if (userRole === 'student' && studentData) {
+        <div class="tab-navigation">
+          <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="switchTab('overview')">Dashboard Overview</button>
+          <button class="tab-btn" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">Profile</button>
+          <button class="tab-btn" [class.active]="activeTab === 'attendance'" (click)="switchTab('attendance')">Attendance</button>
+          <button class="tab-btn" [class.active]="activeTab === 'homework'" (click)="switchTab('homework')">Homework</button>
+          <button class="tab-btn" [class.active]="activeTab === 'fees'" (click)="switchTab('fees')">Fees & Payments</button>
+          <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="switchTab('reviews')">Remarks & Reviews</button>
+        </div>
 
-      @if (activeTab === 'fees' && dashboardData) {
-        <app-fees [data]="dashboardData"></app-fees>
-      }
-
-      @if (activeTab === 'reviews' && dashboardData) {
-        <app-reviews [data]="dashboardData"></app-reviews>
+        <div class="dashboard-content">
+          @if (activeTab === 'overview') { <app-overview [data]="studentData"></app-overview> }
+          @if (activeTab === 'profile') { <app-profile [data]="studentData"></app-profile> }
+          @if (activeTab === 'attendance') { <app-attendance [data]="studentData"></app-attendance> }
+          @if (activeTab === 'homework') { <app-homework [data]="studentData"></app-homework> }
+          @if (activeTab === 'fees') { <app-fees [data]="studentData"></app-fees> }
+          @if (activeTab === 'reviews') { <app-reviews [data]="studentData"></app-reviews> }
+        </div>
       }
 
     </div>

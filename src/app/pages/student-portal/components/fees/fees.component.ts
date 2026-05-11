@@ -1,16 +1,17 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StudentApiService, StudentDashboardData } from '../../../../services/student-api.service';
+import { SchoolApiService, StudentDashboardData } from '../../../../services/school-api.service';
 
 @Component({
   selector: 'app-fees',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './fees.component.html',
   styleUrl: './fees.component.css'
 })
 export class FeesComponent {
-  private studentApi = inject(StudentApiService);
+  private studentApi = inject(SchoolApiService);
   
   @Input() data!: StudentDashboardData;
   @Input() paymentAmount: number = 0; // Receive default amount
@@ -40,7 +41,7 @@ export class FeesComponent {
 
     this.isProcessingPayment = true;
     
-    this.studentApi.submitFeePayment(this.data.studentId, this.paymentAmount).subscribe({
+    this.studentApi.submitFeePayment(this.data.userId, this.paymentAmount).subscribe({
       next: (response) => {
         if (response.success) {
           this.isProcessingPayment = false;
