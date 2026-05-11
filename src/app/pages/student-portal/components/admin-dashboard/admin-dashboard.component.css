@@ -221,6 +221,22 @@ td {
   cursor: pointer;
 }
 
+.spinner-circle {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .success-txt { color: #5aa112; font-weight: 700; margin-top: 15px; text-align: center; }
 
 /* Staff List */
@@ -396,6 +412,62 @@ td {
   gap: 30px;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+.nav-badge {
+  background: var(--vibrant-red);
+  color: white;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  color: #e2e8f0;
+}
+
+.btn-reject {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-reject:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-approve {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bcf0da;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-right: 8px;
+}
+
+.btn-approve:hover {
+  background: #166534;
+  color: white;
 }
 
 .id-card {

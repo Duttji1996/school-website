@@ -34,7 +34,11 @@
   <!-- NAVIGATION -->
   <div class="admin-nav glass-card">
     <button [class.active]="activeTab === 'overview'" (click)="switchTab('overview')"><i class="pi pi-chart-bar"></i> Overview</button>
-    <button [class.active]="activeTab === 'students'" (click)="switchTab('students')"><i class="pi pi-user-plus"></i> Student Management</button>
+    <button [class.active]="activeTab === 'pending'" (click)="switchTab('pending')" class="nav-pending">
+      <i class="pi pi-user-plus"></i> Pending Registrations
+      <span class="nav-badge" *ngIf="pendingStudents.length > 0">{{ pendingStudents.length }}</span>
+    </button>
+    <button [class.active]="activeTab === 'students'" (click)="switchTab('students')"><i class="pi pi-users"></i> Student Database</button>
     <button [class.active]="activeTab === 'teachers'" (click)="switchTab('teachers')"><i class="pi pi-id-card"></i> Staff Directory</button>
     <button [class.active]="activeTab === 'fees'" (click)="switchTab('fees')"><i class="pi pi-cog"></i> Fee Structure</button>
     <button [class.active]="activeTab === 'payroll'" (click)="switchTab('payroll')"><i class="pi pi-money-bill"></i> Payroll</button>
@@ -65,7 +69,56 @@
       </div>
     </div>
 
-    <!-- STUDENT MANAGEMENT -->
+    <!-- PENDING REGISTRATIONS -->
+    <div *ngIf="activeTab === 'pending'" class="tab-pane fade-in">
+      <div class="glass-card panel">
+        <div class="panel-header">
+          <h3>Pending Student Approvals</h3>
+          <p class="subtitle">{{ pendingStudents.length }} applications waiting for review</p>
+        </div>
+
+        <div class="table-responsive">
+          <table *ngIf="pendingStudents.length > 0; else noPending">
+            <thead>
+              <tr>
+                <th>Registration Date</th>
+                <th>Full Name</th>
+                <th>Email ID</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of pendingStudents">
+                <td style="color: #1e293b !important; font-weight: 600;">
+                  {{ s.admissionDate | date:'mediumDate' }}
+                  <span *ngIf="!s.admissionDate">Today</span>
+                </td>
+                <td>
+                  <strong style="color: #1e293b !important; font-weight: 800; display: block;">
+                    {{ s.name || s.fullName || s.studentName || 'New Registration' }}
+                  </strong>
+                </td>
+                <td style="color: #475569 !important; font-weight: 500;">
+                  {{ s.email || 'Contact Admin' }}
+                </td>
+                <td class="action-cell">
+                  <button class="btn-approve" (click)="handleApproveStudent(s.id)">Approve</button>
+                  <button class="btn-reject" (click)="handleRejectStudent(s.id)">Reject</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noPending>
+            <div class="empty-state">
+              <i class="pi pi-check-circle"></i>
+              <p>No pending registrations at the moment.</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENT DATABASE -->
     <div *ngIf="activeTab === 'students' && !selectedStudent" class="tab-pane fade-in">
       
       <!-- LIST VIEW -->
@@ -105,11 +158,11 @@
                   <td class="id-col">#{{ s.id.slice(0, 8) }}</td>
                   <td>
                     <div class="name-cell">
-                      <strong>{{ s.name }}</strong>
-                      <span>{{ s.email }}</span>
+                      <strong style="color: #1e293b;">{{ s.name || s.fullName }}</strong>
+                      <span style="color: #64748b;">{{ s.email }}</span>
                     </div>
                   </td>
-                  <td>Class {{ s.className }} - {{ s.section }}</td>
+                  <td style="color: #1e293b;">Class {{ s.className }} - {{ s.section }}</td>
                   <td><span class="badge" [class]="s.status">{{ s.status }}</span></td>
                   <td class="action-cell">
                     <button class="btn-edit" (click)="handleEditStudent(s)">Edit</button>
@@ -219,8 +272,8 @@
           <div class="form-footer">
             <button type="button" class="btn-cancel" (click)="viewMode = 'list'">Cancel</button>
             <button type="submit" class="action-btn" [disabled]="isProcessing">
-              <span *ngIf="!isProcessing">{{ isEditing ? 'Save Changes' : 'Enroll Student' }}</span>
-              <span *ngIf="isProcessing"><i class="pi pi-spin pi-spinner"></i> Processing...</span>
+              <span *ngIf="isProcessing" class="spinner-circle"></span>
+              <span>{{ isEditing ? 'Save Changes' : 'Enroll Student' }}</span>
             </button>
           </div>
           <p *ngIf="successMessage" class="success-txt">{{ successMessage }}</p>
@@ -244,8 +297,8 @@
               <input type="number" placeholder="Base Salary" [(ngModel)]="newTeacher.salary" name="salary" required />
             </div>
             <button type="submit" class="action-btn" [disabled]="isProcessing">
-              <span *ngIf="!isProcessing">Register Staff</span>
-              <span *ngIf="isProcessing"><i class="pi pi-spin pi-spinner"></i> Saving...</span>
+              <span *ngIf="isProcessing" class="spinner-circle"></span>
+              <span>Register Staff</span>
             </button>
             <p *ngIf="successMessage" class="success-txt">{{ successMessage }}</p>
           </form>

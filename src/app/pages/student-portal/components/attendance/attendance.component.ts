@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { StudentDashboardData, AttendanceDetail, Holiday } from '../../../../services/school-api.service';
+import { NoDataComponent } from '../../../../components/no-data/no-data.component';
 
 interface CalendarDay {
   date: Date;
@@ -12,7 +13,7 @@ interface CalendarDay {
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NoDataComponent],
   templateUrl: './attendance.component.html',
   styleUrl: './attendance.component.css'
 })

@@ -33,7 +33,8 @@
     <div class="section-header">
       <h3><i class="pi pi-calendar-plus"></i> Public Holidays 2026</h3>
     </div>
-    <div class="holiday-list">
+    
+    <div *ngIf="data.holidayCalendar.length > 0; else noHolidays" class="holiday-list">
       <div class="holiday-item" *ngFor="let holiday of data.holidayCalendar">
         <div class="holiday-date">
           <span class="day">{{ holiday.date | date:'dd' }}</span>
@@ -45,5 +46,13 @@
         </div>
       </div>
     </div>
+
+    <ng-template #noHolidays>
+      <app-no-data 
+        icon="pi pi-calendar" 
+        title="No Holidays Listed" 
+        message="Upcoming school holidays and festivals will be listed here.">
+      </app-no-data>
+    </ng-template>
   </div>
 </div>

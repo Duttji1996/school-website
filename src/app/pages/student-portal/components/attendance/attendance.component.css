@@ -118,49 +118,75 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: #f8fafc;
+  border-radius: 14px;
+  background: white;
   font-weight: 700;
   position: relative;
-  transition: 0.3s;
-  cursor: default;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 1px solid #f1f5f9;
+}
+
+.day:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 .day.not-current {
-  opacity: 0.3;
+  opacity: 0.2;
+  background: transparent;
+  border: none;
 }
 
 .day span {
+  font-size: 1.1rem;
   z-index: 2;
 }
 
 .status-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  margin-top: 5px;
+  margin-top: 4px;
 }
 
 /* Status Styles */
-.day.present { background: rgba(126, 211, 33, 0.15); color: #5aa112; }
-.day.present .status-dot { background: #5aa112; }
+.day.present { 
+  background: #f0fdf4; 
+  color: #166534; 
+  border-color: #bcf0da;
+}
+.day.present .status-dot { background: #22c55e; }
 
-.day.absent { background: rgba(255, 90, 95, 0.15); color: var(--vibrant-red); }
-.day.absent .status-dot { background: var(--vibrant-red); }
+.day.absent { 
+  background: #fef2f2; 
+  color: #991b1b; 
+  border-color: #fecaca;
+}
+.day.absent .status-dot { background: #ef4444; }
 
-.day.holiday { background: rgba(74, 144, 226, 0.15); color: var(--primary-blue); }
-.day.holiday .status-dot { background: var(--primary-blue); }
+.day.holiday { 
+  background: #eff6ff; 
+  color: #1e40af; 
+  border-color: #bfdbfe;
+}
+.day.holiday .status-dot { background: #3b82f6; }
 
-.day.sunday { background: #e2e8f0; color: #64748b; }
-.day.sunday .status-dot { background: #64748b; }
+.day.sunday { 
+  background: #f8fafc; 
+  color: #94a3b8; 
+  border-color: #e2e8f0;
+}
+.day.sunday .status-dot { background: #cbd5e1; }
 
 .calendar-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #e2e8f0;
+  gap: 25px;
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid #f1f5f9;
   justify-content: center;
 }
 

@@ -9,13 +9,29 @@
       <span class="icon">📅</span>
     </div>
     <div class="stat-body">
-      <div class="percentage-circle" [style.--percent]="data.attendance.percentage + '%'">
-        <span>{{ data.attendance.percentage }}%</span>
-      </div>
-      <div class="stat-details">
-        <p><strong>Total Days:</strong> {{ data.attendance.totalDays }}</p>
-        <p style="color: var(--soft-green);"><strong>Present:</strong> {{ data.attendance.presentDays }}</p>
-        <p style="color: var(--vibrant-red);"><strong>Absent:</strong> {{ data.attendance.absentDays }}</p>
+      <div class="mini-calendar">
+        <div class="week-grid">
+          <div class="week-day-cell" *ngFor="let day of weekDays">
+            <span class="day-label">{{ day.date | date:'E' }}</span>
+            <div class="day-dot" [ngClass]="day.status || 'empty'">
+              {{ day.dayNum }}
+            </div>
+          </div>
+        </div>
+        <div class="attendance-summary">
+          <div class="summary-item">
+            <span class="val">{{ data.attendance.presentDays || 0 }}</span>
+            <span class="lbl">Present</span>
+          </div>
+          <div class="summary-item">
+            <span class="val">{{ data.attendance.absentDays || 0 }}</span>
+            <span class="lbl">Absent</span>
+          </div>
+          <div class="summary-item">
+            <span class="val">{{ data.attendance.percentage || 0 }}%</span>
+            <span class="lbl">Avg</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -27,9 +43,9 @@
       <span class="icon">📈</span>
     </div>
     <div class="stat-body progress-body">
-      <h1>{{ data.progress.overallPercentage }}%</h1>
+      <h1>{{ data.progress.overallPercentage || 0 }}%</h1>
       <div class="progress-bar-container">
-        <div class="progress-fill" [style.width]="data.progress.overallPercentage + '%'"></div>
+        <div class="progress-fill" [style.width]="(data.progress.overallPercentage || 0) + '%'"></div>
       </div>
       <p class="remarks">"{{ data.progress.remarks }}"</p>
     </div>
@@ -39,7 +55,8 @@
 <!-- Exams Section -->
 <div class="exams-section glass-card">
   <h3>Recent Exam Results</h3>
-  <div class="table-responsive">
+  
+  <div *ngIf="data.recentExams.length > 0; else noExams" class="table-responsive">
     <table class="exam-table">
       <thead>
         <tr>
@@ -51,20 +68,26 @@
         </tr>
       </thead>
       <tbody>
-        @for (exam of data.recentExams; track exam.subject) {
-          <tr>
-            <td>{{ exam.date | date:'mediumDate' }}</td>
-            <td><strong>{{ exam.subject }}</strong></td>
-            <td>{{ exam.obtainedMarks }}</td>
-            <td>{{ exam.totalMarks }}</td>
-            <td>
-              <span class="grade-badge" [ngClass]="'grade-' + exam.grade.charAt(0).toLowerCase()">
-                {{ exam.grade }}
-              </span>
-            </td>
-          </tr>
-        }
+        <tr *ngFor="let exam of data.recentExams">
+          <td>{{ exam.date | date:'mediumDate' }}</td>
+          <td><strong>{{ exam.subject }}</strong></td>
+          <td>{{ exam.obtainedMarks }}</td>
+          <td>{{ exam.totalMarks }}</td>
+          <td>
+            <span class="grade-badge" [ngClass]="'grade-' + exam.grade.charAt(0).toLowerCase()">
+              {{ exam.grade }}
+            </span>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
+
+  <ng-template #noExams>
+    <app-no-data 
+      icon="pi pi-file-edit" 
+      title="No Exam Results" 
+      message="Your recent exam results will appear here once they are published by the school.">
+    </app-no-data>
+  </ng-template>
 </div>

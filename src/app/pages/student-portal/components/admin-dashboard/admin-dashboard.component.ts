@@ -14,7 +14,7 @@ export class AdminDashboardComponent {
   @Input() data!: AdminDashboardData;
   private api = inject(SchoolApiService);
 
-  activeTab: 'overview' | 'students' | 'teachers' | 'fees' | 'payroll' = 'overview';
+  activeTab: 'overview' | 'pending' | 'students' | 'teachers' | 'fees' | 'payroll' = 'overview';
   selectedStudent: any = null;
   viewMode: 'list' | 'form' = 'list';
   isEditing = false;
@@ -162,7 +162,26 @@ export class AdminDashboardComponent {
     this.api.approveStudent(id).subscribe(() => {
       const student = this.data.students.find(s => s.id === id);
       if (student) student.status = 'active';
+      this.refreshData();
     });
+  }
+
+  handleRejectStudent(id: string) {
+    if (confirm('Are you sure you want to reject this registration?')) {
+      this.api.updateStudent(id, { status: 'rejected' }).subscribe(() => {
+        const student = this.data.students.find(s => s.id === id);
+        if (student) student.status = 'rejected';
+        this.refreshData();
+      });
+    }
+  }
+
+  get pendingStudents() {
+    return this.data.students.filter(s => s.status === 'pending');
+  }
+
+  get activeStudents() {
+    return this.data.students.filter(s => s.status === 'active');
   }
 
   handleViewStudent(student: SchoolStudent) {

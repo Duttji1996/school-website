@@ -42,6 +42,14 @@ export class StudentPortalComponent implements OnInit {
   teacherData: TeacherDashboardData | null = null;
   adminData: AdminDashboardData | null = null;
 
+  isSignupMode = false;
+  signupSuccess = false;
+  signupData = {
+    fullName: '',
+    email: '',
+    password: ''
+  };
+
   activeTab: 'overview' | 'profile' | 'attendance' | 'homework' | 'fees' | 'reviews' = 'overview';
 
   email = '';
@@ -81,6 +89,32 @@ export class StudentPortalComponent implements OnInit {
       const fallbackName = this.studentData?.studentName || this.teacherData?.teacherName || 'User';
       imgElement.src = `https://ui-avatars.com/api/?name=${fallbackName}&background=fadb5f&color=0c1e33`;
     }
+  }
+
+  handleSignup(event: Event) {
+    event.preventDefault();
+    this.isLoading = true;
+    this.loginError = '';
+
+    this.schoolApi.signup(this.signupData).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.signupSuccess = true;
+        this.isSignupMode = false;
+        // Pre-fill login email
+        this.email = this.signupData.email;
+      },
+      error: (err) => {
+        this.loginError = err.error?.message || 'Registration failed. Please try again.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  toggleSignup() {
+    this.isSignupMode = !this.isSignupMode;
+    this.loginError = '';
+    this.signupSuccess = false;
   }
 
   handleLogin(event: Event) {

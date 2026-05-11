@@ -109,6 +109,8 @@ export interface SchoolStudent {
   admissionDate?: string;
   contactNo?: string;
   address?: string;
+  fullName?: string;    // Fallback for different API mappings
+  studentName?: string; // Fallback for different API mappings
 }
 
 export interface SchoolTeacher {
@@ -134,6 +136,7 @@ export interface StudentDashboardData {
   className: string;
   section: string;
   rollNumber: string;
+  status: 'active' | 'pending' | 'rejected';
   profileImage: string;
   profileDetails: StudentProfile;
   attendance: AttendanceRecord;
@@ -171,18 +174,18 @@ export interface AdminDashboardData {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SchoolApiService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:3000';
-  
-  constructor() { }
+  private baseUrl = 'http://localhost:3000'; // Fallback to localhost for development 'https://school-backend-1aac.onrender.com' ??
+
+  constructor() {}
 
   private getAuthHeaders() {
     const token = localStorage.getItem('udcs_token');
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
   }
 
@@ -190,77 +193,123 @@ export class SchoolApiService {
    * Dummy Login API with role detection
    */
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, { email, password }).pipe(
-      tap(res => {
-        if (res.success && res.token) {
-          localStorage.setItem('udcs_token', res.token);
-          localStorage.setItem('udcs_role', res.role);
-          localStorage.setItem('udcs_userId', res.userId);
-        }
-      })
-    );
+    return this.http
+      .post<LoginResponse>(`${this.baseUrl}/auth/login`, { email, password })
+      .pipe(
+        tap((res) => {
+          if (res.success && res.token) {
+            localStorage.setItem('udcs_token', res.token);
+            localStorage.setItem('udcs_role', res.role);
+            localStorage.setItem('udcs_userId', res.userId);
+          }
+        }),
+      );
+  }
+
+  signup(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/signup`, data);
   }
 
   getStudentData(userId: string): Observable<StudentDashboardData> {
-    return this.http.get<StudentDashboardData>(`${this.baseUrl}/student/dashboard/${userId}`, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get<StudentDashboardData>(
+      `${this.baseUrl}/student/dashboard/${userId}`,
+      {
+        headers: this.getAuthHeaders(),
+      },
+    );
   }
 
   getTeacherData(userId: string): Observable<TeacherDashboardData> {
-    return this.http.get<TeacherDashboardData>(`${this.baseUrl}/teacher/dashboard/${userId}`, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get<TeacherDashboardData>(
+      `${this.baseUrl}/teacher/dashboard/${userId}`,
+      {
+        headers: this.getAuthHeaders(),
+      },
+    );
   }
 
   getAdminData(): Observable<AdminDashboardData> {
-    return this.http.get<AdminDashboardData>(`${this.baseUrl}/admin/dashboard`, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get<AdminDashboardData>(
+      `${this.baseUrl}/admin/dashboard`,
+      {
+        headers: this.getAuthHeaders(),
+      },
+    );
   }
 
   // Management Actions
   registerTeacher(teacher: Partial<SchoolTeacher>): Observable<any> {
     return this.http.post(`${this.baseUrl}/admin/teachers`, teacher, {
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(),
     });
   }
 
   registerStudent(student: Partial<SchoolStudent>): Observable<any> {
     return this.http.post(`${this.baseUrl}/admin/students`, student, {
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(),
     });
   }
 
-  updateStudent(studentId: string, student: Partial<SchoolStudent>): Observable<any> {
-    return this.http.put(`${this.baseUrl}/admin/students/${studentId}`, student, {
-      headers: this.getAuthHeaders()
-    });
+  updateStudent(
+    studentId: string,
+    student: Partial<SchoolStudent>,
+  ): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/admin/students/${studentId}`,
+      student,
+      {
+        headers: this.getAuthHeaders(),
+      },
+    );
   }
 
   approveStudent(studentId: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/admin/students/approve/${studentId}`, {}, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.post(
+      `${this.baseUrl}/admin/students/approve/${studentId}`,
+      {},
+      {
+        headers: this.getAuthHeaders(),
+      },
+    );
   }
 
   processSalary(teacherId: string, amount: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/admin/payroll/credit`, { teacherId, amount }, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.post(
+      `${this.baseUrl}/admin/payroll/credit`,
+      { teacherId, amount },
+      {
+        headers: this.getAuthHeaders(),
+      },
+    );
   }
 
   assignHomework(hw: Partial<Homework>): Observable<any> {
     return this.http.post(`${this.baseUrl}/teacher/homework`, hw, {
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(),
     });
   }
 
-  submitFeePayment(userId: string, amount: number): Observable<{ success: boolean; transactionId: string; message: string }> {
-    return this.http.post<{ success: boolean; transactionId: string; message: string }>(
-      `${this.baseUrl}/student/fees/pay`, 
+  submitFeePayment(
+    userId: string,
+    amount: number,
+  ): Observable<{ success: boolean; transactionId: string; message: string }> {
+    return this.http.post<{
+      success: boolean;
+      transactionId: string;
+      message: string;
+    }>(
+      `${this.baseUrl}/student/fees/pay`,
       { userId, amount },
-      { headers: this.getAuthHeaders() }
+      { headers: this.getAuthHeaders() },
     );
+  }
+
+  sendContactMessage(data: {
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+  }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/contact`, data);
   }
 }
