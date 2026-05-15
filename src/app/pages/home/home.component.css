@@ -531,4 +531,35 @@
   .cta-box { flex-direction: column; text-align: center; gap: 32px; padding: 40px 24px; }
   .cta-actions { flex-direction: column; width: 100%; }
   .message-content { padding: 40px 24px; }
+  .hero-section { padding: 60px 0 100px; }
+  .hero-title { font-size: 3.5rem; }
+  .hero-container { gap: 60px; }
+}
+
+@media (max-width: 768px) {
+  .hero-title { font-size: 2.5rem; }
+  .grand-title { font-size: 3rem; }
+  .grand-subtitle { font-size: 1.1rem; }
+  .time-block { padding: 15px 25px; }
+  .time-block span { font-size: 2rem; }
+  .countdown-placeholder { gap: 15px; }
+  .cta-text h2 { font-size: 1.8rem; }
+  .notice-grid, .activities-grid, .facilities-grid { 
+    grid-template-columns: 1fr; 
+  }
+  .act-details { padding: 20px; }
+  .main-quote { font-size: 1.25rem; }
+  .message-image { padding: 20px; }
+  .banner-branding { gap: 10px; }
+  .banner-school-name { font-size: 1.2rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 2rem; }
+  .grand-title { font-size: 2.2rem; }
+  .time-block { padding: 10px 15px; }
+  .time-block span { font-size: 1.5rem; }
+  .countdown-placeholder { gap: 8px; flex-wrap: wrap; }
+  .hero-actions { flex-direction: column; width: 100%; }
+  .hero-actions button { width: 100%; }
 }
