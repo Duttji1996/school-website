@@ -25,10 +25,42 @@
     <button [class.active]="activeTab === 'students'" (click)="switchTab('students')"><i class="pi pi-users"></i> My Students</button>
     <button [class.active]="activeTab === 'homework'" (click)="switchTab('homework')"><i class="pi pi-book"></i> Homework Manager</button>
     <button [class.active]="activeTab === 'stats'" (click)="switchTab('stats')"><i class="pi pi-wallet"></i> My Payroll</button>
+    <button [class.active]="activeTab === 'security'" (click)="switchTab('security')"><i class="pi pi-lock"></i> Security</button>
   </div>
 
   <!-- CONTENT -->
   <div class="content">
+    
+    <!-- SECURITY -->
+    <div *ngIf="activeTab === 'security'" class="fade-in">
+      <div class="glass-card panel" style="max-width: 500px; margin: 0 auto;">
+        <h3>Update Account Password</h3>
+        <p class="subtitle mb-4">Ensure your account remains secure by using a strong password.</p>
+        
+        <form (submit)="handleChangePassword()">
+          <div class="field mb-3">
+            <label>Current Password</label>
+            <input type="password" [(ngModel)]="oldPassword" name="oldPw" placeholder="••••••••" required />
+          </div>
+          <div class="field mb-3">
+            <label>New Password</label>
+            <input type="password" [(ngModel)]="newPassword" name="newPw" placeholder="••••••••" required />
+          </div>
+          <div class="field mb-4">
+            <label>Confirm New Password</label>
+            <input type="password" [(ngModel)]="confirmPassword" name="confPw" placeholder="••••••••" required />
+          </div>
+          
+          <p *ngIf="message" [class.success-txt]="!isError" [class.error-txt]="isError" class="mb-3">
+            {{ message }}
+          </p>
+
+          <button type="submit" class="action-btn" [disabled]="isProcessing">
+            {{ isProcessing ? 'Updating...' : 'Update Password' }}
+          </button>
+        </form>
+      </div>
+    </div>
     
     <!-- DASHBOARD -->
     <div *ngIf="activeTab === 'overview'" class="fade-in">

@@ -1,34 +1,39 @@
-/* Stats Grid */
+/* STATS GRID */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  margin-bottom: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
+/* STAT CARD */
 .stat-card {
-  padding: 25px;
-  border-top: 4px solid var(--soft-green);
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.stat-card:nth-child(2) {
-  border-top-color: var(--sunny-yellow);
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(30, 58, 138, 0.2);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  padding-bottom: 10px;
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid var(--border-light);
+  background-color: var(--bg-soft);
 }
 
 .card-header h3 {
   margin: 0;
+  font-size: 1.25rem;
   color: var(--text-dark);
 }
 
@@ -37,127 +42,135 @@
 }
 
 .stat-body {
-  display: block;
-  width: 100%;
+  padding: 24px;
 }
 
-/* Mini Calendar */
+/* MINI CALENDAR (ATTENDANCE) */
 .mini-calendar {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .week-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  display: flex;
+  justify-content: space-between;
   gap: 8px;
-  margin-bottom: 20px;
 }
 
 .week-day-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  flex: 1;
 }
 
 .day-label {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
 .day-dot {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 700;
-  background: #f1f5f9;
-  color: #475569;
-  transition: 0.3s;
+  font-weight: 600;
+  font-size: 0.875rem;
+  background-color: var(--bg-soft);
+  color: var(--text-dark);
+  border: 1px solid var(--border-light);
 }
 
-.day-dot.present { background: var(--soft-green); color: white; }
-.day-dot.absent { background: var(--vibrant-red); color: white; }
-.day-dot.holiday { background: var(--primary-blue); color: white; }
-.day-dot.sunday { background: #e2e8f0; color: #94a3b8; }
-.day-dot.empty { background: #f8fafc; border: 1px dashed #cbd5e1; }
+.day-dot.present { background-color: #dcfce7; color: #166534; border-color: #bcf0da; }
+.day-dot.absent { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.day-dot.holiday { background-color: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+.day-dot.sunday { background-color: var(--bg-main); color: var(--text-muted); }
 
 .attendance-summary {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding-top: 15px;
-  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--bg-soft);
+  padding: 16px;
+  border-radius: var(--radius-sm);
 }
 
 .summary-item {
-  text-align: center;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .summary-item .val {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 800;
-  color: var(--dark-slate);
+  color: var(--primary);
 }
 
 .summary-item .lbl {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
+/* OVERALL PROGRESS */
 .progress-body {
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
 }
 
 .progress-body h1 {
-  margin: 0;
-  color: var(--primary-blue);
-  font-size: 2.5rem;
+  font-size: 3rem;
+  color: var(--primary);
+  margin: 0 0 16px 0;
+  font-family: var(--font-heading);
 }
 
 .progress-bar-container {
   width: 100%;
   height: 12px;
-  background: #e2e8f0;
-  border-radius: 6px;
+  background-color: var(--bg-soft);
+  border-radius: var(--radius-pill);
   overflow: hidden;
+  margin-bottom: 16px;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--sunny-yellow), var(--soft-green));
-  border-radius: 6px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: var(--radius-pill);
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .remarks {
+  font-size: 0.95rem;
+  color: var(--text-muted);
   font-style: italic;
-  font-size: 0.9rem;
-  color: var(--text-light);
-  margin-top: 10px;
+  margin: 0;
 }
 
-/* Exams Section */
+/* EXAMS SECTION */
 .exams-section {
-  padding: 30px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  background-color: var(--bg-card);
+  padding: 32px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
 }
 
 .exams-section h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
+  margin: 0 0 24px 0;
+  font-size: 1.25rem;
   color: var(--text-dark);
 }
 
@@ -171,29 +184,30 @@
 }
 
 .exam-table th, .exam-table td {
-  padding: 15px;
+  padding: 16px;
   text-align: left;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .exam-table th {
-  background: rgba(74, 144, 226, 0.1);
-  color: var(--primary-blue);
-  font-weight: 700;
+  background-color: var(--bg-soft);
+  color: var(--text-dark);
+  font-weight: 600;
 }
 
 .exam-table td {
-  color: var(--text-dark);
-  font-size: 0.95rem;
+  color: var(--text-muted);
 }
 
 .grade-badge {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-weight: 800;
-  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: var(--bg-soft);
 }
 
-.grade-a { background: rgba(126, 211, 33, 0.2); color: #5aa112; }
-.grade-b { background: rgba(250, 219, 95, 0.3); color: #b59b13; }
-.grade-c { background: rgba(255, 90, 95, 0.2); color: var(--vibrant-red); }
+.grade-a { background-color: #dcfce7; color: #166534; }
+.grade-b { background-color: #eff6ff; color: #1e40af; }
+.grade-c { background-color: #fef9c3; color: #854d0e; }
+.grade-d, .grade-f { background-color: #fee2e2; color: #991b1b; }

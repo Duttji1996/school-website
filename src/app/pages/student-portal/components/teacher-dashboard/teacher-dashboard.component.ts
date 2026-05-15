@@ -14,7 +14,51 @@ export class TeacherDashboardComponent {
   @Input() data!: TeacherDashboardData;
   private api = inject(SchoolApiService);
 
-  activeTab: 'overview' | 'students' | 'homework' | 'stats' = 'overview';
+  activeTab: 'overview' | 'students' | 'homework' | 'stats' | 'security' = 'overview';
+  
+  // Security
+  oldPassword = '';
+  newPassword = '';
+  confirmPassword = '';
+  message = '';
+  isError = false;
+
+  handleChangePassword() {
+    if (!this.oldPassword || !this.newPassword) {
+      this.message = 'Please fill all fields';
+      this.isError = true;
+      return;
+    }
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.message = 'Passwords do not match';
+      this.isError = true;
+      return;
+    }
+
+    this.isProcessing = true;
+    this.message = '';
+
+    this.api.changePassword({
+      userId: this.data.userId,
+      oldPassword: this.oldPassword,
+      newPassword: this.newPassword
+    }).subscribe({
+      next: () => {
+        this.isProcessing = false;
+        this.message = 'Password updated successfully!';
+        this.isError = false;
+        this.oldPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+      },
+      error: (err) => {
+        this.isProcessing = false;
+        this.message = err.error?.message || 'Failed to update password';
+        this.isError = true;
+      }
+    });
+  }
   
   newHomework: Partial<Homework> = { subject: '', title: '', dueDate: '', status: 'assigned' };
   isProcessing = false;

@@ -1,24 +1,21 @@
-<div class="attendance-container">
-  <div class="calendar-section glass-card">
+<div class="attendance-container animate-fade-in">
+  <div class="calendar-section">
     <div class="calendar-header">
-      <button class="nav-btn" (click)="prevMonth()"><i class="pi pi-chevron-left"></i></button>
       <h2>{{ monthName }} {{ year }}</h2>
-      <button class="nav-btn" (click)="nextMonth()"><i class="pi pi-chevron-right"></i></button>
+      <div class="nav-group">
+        <button class="nav-btn" (click)="prevMonth()"><i class="pi pi-chevron-left"></i></button>
+        <button class="nav-btn" (click)="nextMonth()"><i class="pi pi-chevron-right"></i></button>
+      </div>
     </div>
 
     <div class="calendar-grid">
       <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
-      <div class="day" 
-           *ngFor="let day of calendarDays" 
-           [class.not-current]="!day.isCurrentMonth"
-           [class.present]="day.status === 'present'"
-           [class.absent]="day.status === 'absent'"
-           [class.holiday]="day.status === 'holiday'"
-           [class.sunday]="day.status === 'sunday'"
-           [title]="day.holidayName || ''">
-        <span>{{ day.date.getDate() }}</span>
-        <div class="status-dot" *ngIf="day.status"></div>
-      </div>
+      @for (day of calendarDays; track day.date) {
+        <div class="day" [class.not-current]="!day.isCurrentMonth" [class]="day.status" [title]="day.holidayName || ''">
+          <span class="date-num">{{ day.date.getDate() }}</span>
+          <div *ngIf="day.status" class="status-indicator"></div>
+        </div>
+      }
     </div>
 
     <div class="calendar-legend">
@@ -29,22 +26,24 @@
     </div>
   </div>
 
-  <div class="holidays-section glass-card">
+  <div class="holidays-section">
     <div class="section-header">
       <h3><i class="pi pi-calendar-plus"></i> Public Holidays 2026</h3>
     </div>
     
     <div *ngIf="data.holidayCalendar.length > 0; else noHolidays" class="holiday-list">
-      <div class="holiday-item" *ngFor="let holiday of data.holidayCalendar">
-        <div class="holiday-date">
-          <span class="day">{{ holiday.date | date:'dd' }}</span>
-          <span class="month">{{ holiday.date | date:'MMM' }}</span>
+      @for (holiday of data.holidayCalendar; track holiday.date) {
+        <div class="holiday-card">
+          <div class="h-date">
+            <span>{{ holiday.date | date:'dd' }}</span>
+            <span>{{ holiday.date | date:'MMM' }}</span>
+          </div>
+          <div class="h-info">
+            <h4>{{ holiday.name }}</h4>
+            <p>{{ holiday.date | date:'fullDate' }}</p>
+          </div>
         </div>
-        <div class="holiday-info">
-          <h4>{{ holiday.name }}</h4>
-          <p>{{ holiday.date | date:'fullDate' }}</p>
-        </div>
-      </div>
+      }
     </div>
 
     <ng-template #noHolidays>

@@ -1,112 +1,179 @@
-<div class="contact-page">
-  <!-- Hero Section -->
-  <section class="contact-hero">
-    <div class="container">
-      <span class="badge">Get In Touch</span>
-      <h1>Contact <span class="accent-text">Usha Devi Convent School</span></h1>
-      <p>We are here to answer your questions and help you with the admission process.</p>
-    </div>
-  </section>
+<section class="page-header">
+  <div class="container text-center">
+    <span class="badge-tag">Get in Touch</span>
+    <h1 class="page-title">Contact Us</h1>
+    <p class="page-subtitle">
+      We would love to hear from you. Admissions, inquiries, or feedback.
+    </p>
+  </div>
+</section>
 
-  <!-- Contact Info Cards -->
-  <section class="contact-info-section">
-    <div class="container">
-      <div class="info-grid">
-        <div class="info-card glass-card">
-          <div class="icon-circle"><i class="pi pi-map-marker"></i></div>
-          <h3>Our Address</h3>
-          <p>Lalganj, Mirzapur, <br>Uttar Pradesh - 231211, India</p>
-        </div>
-        <div class="info-card glass-card">
-          <div class="icon-circle"><i class="pi pi-phone"></i></div>
-          <h3>Call Us</h3>
-          <p>+91 94519 43580</p>
-          <p>+91 87569 23004</p>
-        </div>
-        <div class="info-card glass-card">
-          <div class="icon-circle"><i class="pi pi-envelope"></i></div>
-          <h3>Email Us</h3>
-          <p>info&#64;udcs.edu.in</p>
-          <p>admissions&#64;udcs.edu.in</p>
+<section class="contact-section section-padding">
+  <div class="container">
+    <div class="grid-2">
+      <!-- Contact Info -->
+      <div class="contact-info animate-up">
+        <h2 class="section-title">
+          Reach Out to <span class="highlight">UDCS</span>
+        </h2>
+        <p class="mb-4 text-muted">
+          Our admissions office is open Monday through Saturday. Feel free to
+          contact us or visit the campus.
+        </p>
+
+        <div class="info-blocks">
+          <div class="info-card">
+            <div class="info-icon">📍</div>
+            <div class="info-details">
+              <h3>Campus Address</h3>
+              <p>Usha Devi Convent School<br />Hallia, Lalganj Mirzapur, 231211 (UP)</p>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">📞</div>
+            <div class="info-details">
+              <h3>Phone Numbers</h3>
+              <p>+91 9451943580<br />+91 11 2345 6789</p>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">✉️</div>
+            <div class="info-details">
+              <h3>Email Addresses</h3>
+              <p>info&#64;udcs.edu.in<br />admissions&#64;udcs.edu.in</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Contact Form & Map -->
-  <section class="form-map-section">
-    <div class="container">
-      <div class="split-layout">
-        <!-- FORM -->
-        <div class="form-container glass-card">
-          <h2>Send us a <span class="accent-text">Message</span></h2>
-          <p>Fill out the form below and we'll get back to you within 24 hours.</p>
+      <!-- Contact Form -->
+      <div
+        class="contact-form-container card animate-up"
+        style="animation-delay: 0.2s"
+      >
+        <h3 class="form-title">Send us a Message</h3>
+
+        <div *ngIf="submitSuccess" class="alert-success">
+          Your message has been sent successfully! Our team will contact you
+          shortly.
+        </div>
+
+        <div *ngIf="submitError" class="alert-error">
+          {{ submitError }}
+        </div>
+
+        <form
+          [formGroup]="contactForm"
+          (ngSubmit)="onSubmit()"
+          class="contact-form"
+          *ngIf="!submitSuccess"
+        >
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              placeholder="Enter your full name"
+            />
+            <span
+              class="error-msg"
+              *ngIf="
+                contactForm.get('name')?.touched &&
+                contactForm.get('name')?.invalid
+              "
+            >
+              Name is required.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              placeholder="Enter your email address"
+            />
+            <span
+              class="error-msg"
+              *ngIf="
+                contactForm.get('email')?.touched &&
+                contactForm.get('email')?.invalid
+              "
+            >
+              Valid email is required.
+            </span>
+          </div>
           
-          <div *ngIf="submitSuccess" class="success-alert">
-            <i class="pi pi-check-circle"></i>
-            <div>
-              <h4>Message Sent!</h4>
-              <p>Thank you for reaching out. We have sent a confirmation email to you and our team will get back to you shortly.</p>
-            </div>
-            <button (click)="submitSuccess = false" class="close-btn">&times;</button>
+          <div class="form-group">
+            <label for="phone">Mobile Number *</label>
+            <input
+              type="text"
+              id="phone"
+              formControlName="phone"
+              placeholder="Enter your 10-digit mobile number"
+            />
+            <span
+              class="error-msg"
+              *ngIf="
+                contactForm.get('phone')?.touched &&
+                contactForm.get('phone')?.invalid
+              "
+            >
+              Valid mobile number is required.
+            </span>
           </div>
 
-          <div *ngIf="submitError" class="error-alert">
-            <i class="pi pi-exclamation-circle"></i>
-            <p>{{ submitError }}</p>
+          <div class="form-group">
+            <label for="subject">Subject *</label>
+            <input
+              type="text"
+              id="subject"
+              formControlName="subject"
+              placeholder="What is this regarding?"
+            />
+            <span
+              class="error-msg"
+              *ngIf="
+                contactForm.get('subject')?.touched &&
+                contactForm.get('subject')?.invalid
+              "
+            >
+              Subject is required.
+            </span>
           </div>
 
-          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form" *ngIf="!submitSuccess">
-            <div class="input-row">
-              <div class="input-field">
-                <label>Your Name</label>
-                <input type="text" formControlName="name" placeholder="John Doe" />
-                <span class="error-msg" *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.invalid">
-                  Name is required
-                </span>
-              </div>
-              <div class="input-field">
-                <label>Email Address</label>
-                <input type="email" formControlName="email" placeholder="john@example.com" />
-                <span class="error-msg" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
-                  Valid email is required
-                </span>
-              </div>
-            </div>
-            
-            <div class="input-field">
-              <label>Subject</label>
-              <input type="text" formControlName="subject" placeholder="Admission Inquiry" />
-              <span class="error-msg" *ngIf="contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid">
-                Subject is required
-              </span>
-            </div>
-            
-            <div class="input-field">
-              <label>Your Message</label>
-              <textarea rows="5" formControlName="message" placeholder="How can we help you?"></textarea>
-              <span class="error-msg" *ngIf="contactForm.get('message')?.touched && contactForm.get('message')?.invalid">
-                Message is required
-              </span>
-            </div>
-            
-            <button type="submit" class="submit-btn" [disabled]="isSubmitting">
-              <span *ngIf="!isSubmitting">Send Message <i class="pi pi-send"></i></span>
-              <span *ngIf="isSubmitting">Sending... <i class="pi pi-spin pi-spinner"></i></span>
-            </button>
-          </form>
-        </div>
-
-        <!-- MAP -->
-        <div class="map-container glass-card">
-          <div class="map-overlay">
-             <i class="pi pi-map" style="font-size: 3rem; color: var(--sunny-yellow); margin-bottom: 20px;"></i>
-             <h3>Find us in Lalganj</h3>
-             <p>Our campus is located in the heart of Lalganj, Mirzapur, providing a serene environment for learning.</p>
+          <div class="form-group">
+            <label for="message">Your Message *</label>
+            <textarea
+              id="message"
+              formControlName="message"
+              rows="5"
+              placeholder="Write your message here..."
+            ></textarea>
+            <span
+              class="error-msg"
+              *ngIf="
+                contactForm.get('message')?.touched &&
+                contactForm.get('message')?.invalid
+              "
+            >
+              Message is required.
+            </span>
           </div>
-          <div class="map-placeholder" style="background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800');"></div>
-        </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-submit"
+            [disabled]="isSubmitting"
+          >
+            {{ isSubmitting ? "Sending..." : "Send Message" }}
+          </button>
+        </form>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>

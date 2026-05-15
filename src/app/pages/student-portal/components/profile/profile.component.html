@@ -1,13 +1,13 @@
 <!-- PROFILE TAB -->
 <div class="profile-tab-content glass-card">
-  <div class="card-header" style="border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 20px;">
-    <h3 style="color: var(--primary-blue); font-family: var(--font-heading); font-size: 1.5rem; margin: 0;">Student Profile Details</h3>
+  <div class="card-header">
+    <h3>Student Profile Details</h3>
   </div>
   
   <div class="profile-grid">
     <div class="profile-info-item">
-      <span class="info-label">Student ID / Roll No</span>
-      <p class="info-value">{{ data.userId }} / {{ data.rollNumber }}</p>
+      <span class="info-label">Roll Number</span>
+      <p class="info-value">{{ data.rollNumber || 'Not Assigned' }}</p>
     </div>
     <div class="profile-info-item">
       <span class="info-label">Class & Section</span>
@@ -23,7 +23,7 @@
     </div>
     <div class="profile-info-item">
       <span class="info-label">Blood Group</span>
-      <p class="info-value" style="color: var(--vibrant-red); font-weight: bold;">{{ data.profileDetails.bloodGroup }}</p>
+      <p class="info-value">{{ data.profileDetails.bloodGroup }}</p>
     </div>
     <div class="profile-info-item">
       <span class="info-label">Aadhar ID</span>
@@ -49,5 +49,33 @@
       <span class="info-label">Admission Date</span>
       <p class="info-value">{{ data.profileDetails.admissionDate | date:'longDate' }}</p>
     </div>
+  </div>
+
+  <div class="password-management mt-5 pt-4" style="border-top: 1px solid var(--border-light);">
+    <h4 class="mb-4">Security Settings</h4>
+    <form (submit)="handleChangePassword()" class="password-form">
+      <div class="pw-grid">
+        <div class="field">
+          <label>Current Password</label>
+          <input type="password" [(ngModel)]="oldPassword" name="oldPw" placeholder="••••••••" required />
+        </div>
+        <div class="field">
+          <label>New Password</label>
+          <input type="password" [(ngModel)]="newPassword" name="newPw" placeholder="••••••••" required />
+        </div>
+        <div class="field">
+          <label>Confirm New Password</label>
+          <input type="password" [(ngModel)]="confirmPassword" name="confPw" placeholder="••••••••" required />
+        </div>
+      </div>
+      
+      <p *ngIf="message" class="mt-3" [class.success-txt]="!isError" [class.error-txt]="isError">
+        {{ message }}
+      </p>
+
+      <button type="submit" class="portal-action-btn-sm mt-3" [disabled]="isLoading">
+        {{ isLoading ? 'Updating...' : 'Update Password' }}
+      </button>
+    </form>
   </div>
 </div>

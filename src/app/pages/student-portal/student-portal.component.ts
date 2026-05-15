@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { SchoolApiService, UserRole, StudentDashboardData, TeacherDashboardData, AdminDashboardData } from '../../services/school-api.service';
 import { OverviewComponent } from './components/overview/overview.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -17,6 +18,7 @@ import { TeacherDashboardComponent } from './components/teacher-dashboard/teache
   imports: [
     CommonModule, 
     FormsModule, 
+    RouterLink,
     OverviewComponent, 
     ProfileComponent, 
     HomeworkComponent, 
@@ -51,12 +53,96 @@ export class StudentPortalComponent implements OnInit {
   };
 
   activeTab: 'overview' | 'profile' | 'attendance' | 'homework' | 'fees' | 'reviews' = 'overview';
+  adminActiveTab: 'overview' | 'pending' | 'students' | 'teachers' | 'fees' | 'payroll' | 'circulars' | 'inquiries' = 'overview';
 
   email = '';
   password = '';
+  
+  // Forgot Password Flow
+  forgotPasswordState: 'none' | 'request' | 'verify' | 'reset' = 'none';
+  otp = '';
+  newPassword = '';
+  resendDisabled = false;
+  resendCountdown = 0;
+  showForgotPasswordLink = false;
+
+  today = new Date();
 
   ngOnInit() {
     this.checkSession();
+  }
+
+  handleForgotPasswordRequest() {
+    if (!this.email) {
+      this.loginError = 'Please enter your email first';
+      return;
+    }
+    this.isLoading = true;
+    this.schoolApi.forgotPassword(this.email).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.forgotPasswordState = 'verify';
+        this.loginError = '';
+        this.startResendTimer();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.loginError = err.error?.message || 'Email not found';
+      }
+    });
+  }
+
+  handleVerifyOTP() {
+    if (!this.otp || this.otp.length < 6) return;
+    this.isLoading = true;
+    this.schoolApi.verifyOTP(this.email, this.otp).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.forgotPasswordState = 'reset';
+        this.loginError = '';
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.loginError = err.error?.message || 'Invalid OTP';
+      }
+    });
+  }
+
+  handleResetPassword() {
+    if (!this.newPassword || this.newPassword.length < 6) return;
+    this.isLoading = true;
+    this.schoolApi.resetPassword({ email: this.email, otp: this.otp, newPassword: this.newPassword }).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.forgotPasswordState = 'none';
+        this.signupSuccess = true; // Use this to show "Password reset successful"
+        this.otp = '';
+        this.newPassword = '';
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.loginError = err.error?.message || 'Failed to reset password';
+      }
+    });
+  }
+
+  handleResendOTP() {
+    if (this.resendDisabled) return;
+    this.schoolApi.resendOTP(this.email).subscribe(() => {
+      this.startResendTimer();
+    });
+  }
+
+  startResendTimer() {
+    this.resendDisabled = true;
+    this.resendCountdown = 60;
+    const interval = setInterval(() => {
+      this.resendCountdown--;
+      if (this.resendCountdown <= 0) {
+        this.resendDisabled = false;
+        clearInterval(interval);
+      }
+    }, 1000);
   }
 
   checkSession() {
@@ -83,6 +169,11 @@ export class StudentPortalComponent implements OnInit {
     this.activeTab = tab;
   }
 
+  switchAdminTab(tab: any) {
+    this.activeTab = 'overview';
+    this.adminActiveTab = tab;
+  }
+
   handleImageError(event: Event) {
     const imgElement = event.target as HTMLImageElement;
     if (!imgElement.src.includes('ui-avatars.com')) {
@@ -95,20 +186,26 @@ export class StudentPortalComponent implements OnInit {
     event.preventDefault();
     this.isLoading = true;
     this.loginError = '';
+    this.signupSuccess = false;
 
-    this.schoolApi.signup(this.signupData).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.signupSuccess = true;
-        this.isSignupMode = false;
-        // Pre-fill login email
-        this.email = this.signupData.email;
-      },
-      error: (err) => {
-        this.loginError = err.error?.message || 'Registration failed. Please try again.';
-        this.isLoading = false;
-      }
-    });
+    // Simulate 3s "Sending/Saving" state for better UX as requested
+    setTimeout(() => {
+      this.schoolApi.signup(this.signupData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.signupSuccess = true;
+          // Clear form after delay
+          setTimeout(() => {
+            this.isSignupMode = false;
+            this.email = this.signupData.email;
+          }, 3000);
+        },
+        error: (err) => {
+          this.loginError = err.error?.message || 'Registration failed. Please try again.';
+          this.isLoading = false;
+        }
+      });
+    }, 3000);
   }
 
   toggleSignup() {
@@ -127,13 +224,16 @@ export class StudentPortalComponent implements OnInit {
         if (response.success) {
           this.userRole = response.role;
           this.fetchRoleSpecificData(response.userId, response.role);
+          this.showForgotPasswordLink = false;
         } else {
           this.loginError = 'Invalid credentials';
+          this.showForgotPasswordLink = true;
           this.isLoading = false;
         }
       },
       error: () => {
         this.loginError = 'Server error. Please try again.';
+        this.showForgotPasswordLink = true;
         this.isLoading = false;
       }
     });

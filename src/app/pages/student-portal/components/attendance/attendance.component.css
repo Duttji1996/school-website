@@ -1,191 +1,148 @@
+/* ATTENDANCE CONTAINER */
 .attendance-container {
   display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 30px;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  padding: 0;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .attendance-container {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
-  .calendar-section, .holidays-section {
-    padding: 20px;
-  }
-  .calendar-header h2 {
-    font-size: 1.4rem;
-  }
-  .calendar-grid {
-    gap: 5px;
-  }
-  .day {
-    border-radius: 8px;
-    font-size: 0.85rem;
-  }
-  .weekday {
-    font-size: 0.75rem;
-  }
-  .legend-item {
-    font-size: 0.8rem;
-    gap: 5px;
-  }
-}
-
-@media (max-width: 480px) {
-  .calendar-section, .holidays-section {
-    padding: 15px;
-  }
-  .calendar-header h2 {
-    font-size: 1.2rem;
-  }
-  .nav-btn {
-    width: 32px;
-    height: 32px;
-  }
-  .calendar-grid {
-    gap: 4px;
-  }
-  .day {
-    border-radius: 6px;
-    font-size: 0.75rem;
-  }
-  .status-dot {
-    width: 4px;
-    height: 4px;
-  }
-  .calendar-legend {
-    gap: 10px;
-  }
-}
-
 .calendar-section {
-  padding: 30px;
   background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .calendar-header h2 {
-  margin: 0;
-  color: var(--primary-blue);
-  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-header h2::before {
+  content: '';
+  width: 8px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.nav-group {
+  display: flex;
+  gap: 6px;
 }
 
 .nav-btn {
-  background: rgba(74, 144, 226, 0.1);
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: var(--primary-blue);
-  cursor: pointer;
-  transition: 0.3s;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: var(--text-dark);
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .nav-btn:hover {
-  background: var(--primary-blue);
+  background: var(--primary);
   color: white;
+  border-color: var(--primary);
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 .weekday {
   text-align: center;
+  font-size: 0.7rem;
   font-weight: 800;
-  color: #64748b;
-  padding: 10px 0;
-  font-size: 0.9rem;
+  color: #94a3b8;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 12px;
 }
 
 .day {
-  aspect-ratio: 1;
+  aspect-ratio: 1.1;
+  background: #f8fafc;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 14px;
-  background: white;
-  font-weight: 700;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  border: 1px solid #f1f5f9;
+  border: 1px solid transparent;
 }
 
 .day:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  transform: translateY(-2px);
+  background: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+  border-color: #e2e8f0;
+}
+
+.day .date-num {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
 }
 
 .day.not-current {
-  opacity: 0.2;
-  background: transparent;
-  border: none;
+  opacity: 0.3;
 }
 
-.day span {
-  font-size: 1.1rem;
-  z-index: 2;
-}
-
-.status-dot {
+.status-indicator {
+  position: absolute;
+  bottom: 6px;
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  margin-top: 4px;
 }
 
-/* Status Styles */
-.day.present { 
-  background: #f0fdf4; 
-  color: #166534; 
-  border-color: #bcf0da;
-}
-.day.present .status-dot { background: #22c55e; }
+/* Status Variations */
+.day.present { background: #f0fdf4; border-color: #dcfce7; }
+.day.present .date-num { color: #166534; }
+.day.present .status-indicator { background: #22c55e; }
 
-.day.absent { 
-  background: #fef2f2; 
-  color: #991b1b; 
-  border-color: #fecaca;
-}
-.day.absent .status-dot { background: #ef4444; }
+.day.absent { background: #fef2f2; border-color: #fee2e2; }
+.day.absent .date-num { color: #991b1b; }
+.day.absent .status-indicator { background: #ef4444; }
 
-.day.holiday { 
-  background: #eff6ff; 
-  color: #1e40af; 
-  border-color: #bfdbfe;
-}
-.day.holiday .status-dot { background: #3b82f6; }
+.day.holiday { background: #eff6ff; border-color: #dbeafe; }
+.day.holiday .date-num { color: #1e40af; }
+.day.holiday .status-indicator { background: #3b82f6; }
 
-.day.sunday { 
-  background: #f8fafc; 
-  color: #94a3b8; 
-  border-color: #e2e8f0;
-}
-.day.sunday .status-dot { background: #cbd5e1; }
-
+/* LEGEND */
 .calendar-legend {
   display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  margin-top: 35px;
-  padding-top: 25px;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 16px;
   border-top: 1px solid #f1f5f9;
   justify-content: center;
 }
@@ -193,101 +150,84 @@
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
+  gap: 6px;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #64748b;
 }
 
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
+.dot { width: 6px; height: 6px; border-radius: 50%; }
+.dot.present { background: #22c55e; }
+.dot.absent { background: #ef4444; }
+.dot.holiday { background: #3b82f6; }
+
+/* HOLIDAYS */
+.holidays-section {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 16px;
+  height: fit-content;
 }
 
-.dot.present { background: #7ed321; }
-.dot.absent { background: #ff5a5f; }
-.dot.holiday { background: #4a90e2; }
-.dot.sunday { background: #cbd5e1; }
-
-/* Holidays Section */
-.holidays-section {
-  padding: 30px;
-  background: white;
-  max-height: 600px;
-  display: flex;
-  flex-direction: column;
+.section-header {
+  margin-bottom: 16px;
 }
 
 .section-header h3 {
-  margin: 0 0 20px 0;
-  color: var(--primary-blue);
-  font-family: var(--font-heading);
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0;
 }
 
 .holiday-list {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 5px;
-}
-
-.holiday-list::-webkit-scrollbar {
-  width: 5px;
-}
-
-.holiday-list::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 10px;
-}
-
-.holiday-item {
   display: flex;
-  gap: 15px;
-  padding: 15px 0;
-  border-bottom: 1px solid #f1f5f9;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.holiday-item:last-child {
-  border-bottom: none;
+.holiday-card {
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
 }
 
-.holiday-date {
-  background: var(--bg-light);
-  min-width: 50px;
-  height: 50px;
+.holiday-card:hover {
+  transform: translateX(3px);
+  border-color: var(--accent);
+}
+
+.h-date {
+  background: var(--primary);
+  color: white;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e2e8f0;
 }
 
-.holiday-date .day {
-  background: transparent;
-  font-size: 1.1rem;
-  line-height: 1;
-  color: var(--primary-blue);
+.h-date span:first-child { font-size: 0.95rem; font-weight: 800; line-height: 1; }
+.h-date span:last-child { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
+
+.h-info h4 {
+  margin: 0 0 1px 0;
+  font-size: 0.85rem;
+  color: #1e293b;
+  font-weight: 700;
 }
 
-.holiday-date .month {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  font-weight: 800;
-  color: #64748b;
-}
-
-.holiday-info h4 {
-  margin: 0 0 5px 0;
-  font-size: 0.95rem;
-  color: var(--dark-slate);
-}
-
-.holiday-info p {
+.h-info p {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #64748b;
 }

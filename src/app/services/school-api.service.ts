@@ -178,7 +178,7 @@ export interface AdminDashboardData {
 })
 export class SchoolApiService {
   private http = inject(HttpClient);
-  private baseUrl = "https://school-backend-1aac.onrender.com" //'http://localhost:3000'; // Fallback to localhost for development 'https://school-backend-1aac.onrender.com' ??
+  private baseUrl =  'http://localhost:3000'; // Fallback to localhost for development 'https://school-backend-1aac.onrender.com' ??
 
   constructor() {}
 
@@ -208,6 +208,26 @@ export class SchoolApiService {
 
   signup(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/signup`, data);
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/forgot-password`, { email });
+  }
+
+  resendOTP(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/resend-otp`, { email });
+  }
+
+  verifyOTP(email: string, otp: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/verify-otp`, { email, otp });
+  }
+
+  resetPassword(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/reset-password`, data);
+  }
+
+  changePassword(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/change-password`, data);
   }
 
   getStudentData(userId: string): Observable<StudentDashboardData> {
@@ -244,8 +264,46 @@ export class SchoolApiService {
     });
   }
 
+  updateTeacher(
+    teacherId: string,
+    teacher: Partial<SchoolTeacher>,
+  ): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/admin/teachers/${teacherId}`,
+      teacher,
+      {
+        headers: this.getAuthHeaders(),
+      },
+    );
+  }
+
   registerStudent(student: Partial<SchoolStudent>): Observable<any> {
     return this.http.post(`${this.baseUrl}/admin/students`, student, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // Communications & Inquiries
+  getCirculars(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/circulars`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  createCircular(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/admin/circulars`, data, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  deleteCircular(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/admin/circulars/${id}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  getContactInquiries(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/contacts`, {
       headers: this.getAuthHeaders(),
     });
   }

@@ -1,50 +1,85 @@
-<section class="header-wrapper">
-  <!-- MAIN HEADER -->
-  <header class="main-header">
-    <div class="header-container">
-      <!-- LEFT LOGO + TITLE -->
-      <div class="brand-section">
-        <div class="school-logo">UDCS</div>
-        <div class="header-text-container">
-          <h2 class="header-title" style="margin-bottom: 2px">
-            <strong>Usha Devi Convent School</strong>
-          </h2>
-          <h1
-            class="mobile-hide header-subtitle"
-            style="
-              margin: 0;
-              text-transform: uppercase;
-              font-weight: 700;
-              letter-spacing: 1px;
-            "
-          >
-            Classes 1 to 5
-          </h1>
-        </div>
-      </div>
-
-      <!-- HAMBURGER MENU BUTTON -->
-      <button class="hamburger-btn mobile-only" (click)="toggleMenu()">
-        <span class="hamburger-line" [class.open]="isMenuOpen"></span>
-        <span class="hamburger-line" [class.open]="isMenuOpen"></span>
-        <span class="hamburger-line" [class.open]="isMenuOpen"></span>
-      </button>
-
-      <!-- NAVIGATION -->
-      <nav class="main-nav" [class.menu-open]="isMenuOpen">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
-        <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About Us</a>
-        <a routerLink="/institute" routerLinkActive="active" (click)="closeMenu()">Institute</a>
-        <a routerLink="/gallery" routerLinkActive="active" (click)="closeMenu()">Gallery</a>
-        <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a>
-        <a
-          routerLink="/portal"
-          class="btn-primary-custom portal-btn-mobile"
-          style="text-transform: none; font-size: 14px"
-          (click)="closeMenu()"
-          >Student Portal</a
-        >
-      </nav>
+<!-- PROFESSIONAL TOP BAR -->
+<div class="top-bar">
+  <div class="container top-bar-inner">
+    <div class="top-bar-left">
+      <span><i class="icon">📞</i> +91 9451943580</span>
+      <span><i class="icon">✉️</i> info&#64;udcs.edu.in</span>
     </div>
-  </header>
-</section>
+    <div class="top-bar-right">
+      <span class="admission-status">✨ Celebrating Excellence since 2027 ✨</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN DESKTOP HEADER -->
+<header class="main-header" [class.header-scrolled]="isScrolled">
+  <div class="container header-container">
+    <!-- BRANDING LOGO -->
+    <a routerLink="/" class="brand-logo">
+      <div class="udcs-logo logo-md">UDCS</div>
+      <div class="logo-text">
+        <h1 class="logo-title">USHA DEVI CONVENT SCHOOL</h1>
+        <p class="logo-tagline">Nurturing Leaders of Tomorrow</p>
+      </div>
+    </a>
+
+    <!-- PROFESSIONAL NAVIGATION -->
+    <nav class="desktop-nav">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Home</a
+      >
+      <a routerLink="/about" routerLinkActive="active">About Us</a>
+      <a routerLink="/institute" routerLinkActive="active"
+        >Academics & Campus</a
+      >
+      <a routerLink="/gallery" routerLinkActive="active">Gallery</a>
+      <a routerLink="/contact" routerLinkActive="active">Contact</a>
+    </nav>
+
+    <!-- RIGHT ACTION -->
+    <div class="header-action">
+      <a routerLink="/portal" class="btn btn-portal">
+        <span *ngIf="!isLoggedIn">Login Portal</span>
+        <span *ngIf="isLoggedIn">👤 My Dashboard</span>
+      </a>
+
+      <!-- HAMBURGER ICON (MOBILE ONLY) -->
+      <button class="hamburger-btn" (click)="toggleMenu()" aria-label="Menu">
+        <span class="bar" [class.open]="isMenuOpen"></span>
+        <span class="bar" [class.open]="isMenuOpen"></span>
+        <span class="bar" [class.open]="isMenuOpen"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE NAVIGATION MENU -->
+<div class="mobile-menu" [class.show]="isMenuOpen">
+  <div class="mobile-nav-links">
+    <a
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="closeMenu()"
+      >Home</a
+    >
+    <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()"
+      >About Us</a
+    >
+    <a routerLink="/institute" routerLinkActive="active" (click)="closeMenu()"
+      >Academics & Campus</a
+    >
+    <a routerLink="/gallery" routerLinkActive="active" (click)="closeMenu()"
+      >Gallery</a
+    >
+    <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()"
+      >Contact</a
+    >
+    <a routerLink="/portal" class="btn btn-portal-mobile" (click)="closeMenu()"
+      >Student Portal</a
+    >
+  </div>
+</div>

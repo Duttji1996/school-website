@@ -1,0 +1,30 @@
+<section class="page-header">
+  <div class="container">
+    <h1>Photo Gallery</h1>
+    <p>Capturing the moments of joy and learning at UDCS.</p>
+  </div>
+</section>
+
+<section class="gallery-section section-padding">
+  <div class="container">
+    <div class="filter-controls text-center mb-5">
+      <button 
+        *ngFor="let cat of categories" 
+        (click)="setCategory(cat)"
+        [class.active]="selectedCategory === cat"
+        class="filter-btn">
+        {{ cat }}
+      </button>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item animate-fade-up" *ngFor="let img of filteredImages">
+        <img [src]="img.url" [alt]="img.title">
+        <div class="gallery-overlay">
+          <span class="cat-tag">{{ img.category }}</span>
+          <span class="img-title">{{ img.title }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,190 +1,257 @@
 @if (!isLoggedIn) {
+  <!-- LOGIN PAGE (Kept modern but with sidebar info) -->
   <div class="split-container">
-    <!-- LEFT SIDE -->
     <div class="visual-side">
+      <div class="bubbles-container">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+      </div>
+
       <div class="overlay-content">
-        <div class="badge" style="background: var(--sunny-yellow); color: var(--dark-slate); margin-bottom: 20px;">Portal Entry</div>
-        <h2>Integrated School <span style="color: var(--sunny-yellow)">Management</span> System</h2>
-        <p>A unified platform for students, teachers, and administrators to collaborate and manage school operations seamlessly.</p>
-        <div class="feature-list">
-          <p><i class="pi pi-check-circle"></i> Admin Panel</p>
-          <p><i class="pi pi-check-circle"></i> Staff Portal</p>
-          <p><i class="pi pi-check-circle"></i> Student Dashboard</p>
+        <a routerLink="/" class="back-home-pill"><i class="pi pi-arrow-left"></i> Back to Website</a>
+        <span class="badge">Portal Access</span>
+        <h2>UDCS <span class="gold-text">Unified</span> Dashboard</h2>
+        <p>A comprehensive management system for students, faculty, and administration.</p>
+        <div class="feature-tags">
+          <span>Real-time Attendance</span>
+          <span>Digital Homework</span>
+          <span>Fee Management</span>
+          <span>Academic Reports</span>
         </div>
       </div>
     </div>
-
-    <!-- RIGHT SIDE -->
     <div class="form-side">
-      <div class="auth-wrapper">
+      <div class="auth-box animate-fade-up">
         <div class="auth-header">
-          <div class="footer-logo" style="background: var(--sunny-yellow); color: var(--text-dark); padding: 12px 16px; font-weight: 900; border-radius: 8px; font-family: var(--font-heading); font-size: 1.4rem; display: inline-block; margin-bottom: 15px;">UDCS</div>
-          <h3 *ngIf="!isSignupMode">UDCS Portal</h3>
-          <h3 *ngIf="isSignupMode">Student Sign Up</h3>
-          <p *ngIf="!isSignupMode">Sign in to access your dashboard</p>
-          <p *ngIf="isSignupMode">Create an account to join UDCS</p>
+          <div class="portal-brand-block mb-4">
+            <div class="udcs-logo-ring">UDCS</div>
+            <div class="brand-text">
+              <h4>Usha Devi</h4>
+              <p>Convent School</p>
+            </div>
+          </div>
+          
+          <h3 *ngIf="!isSignupMode && forgotPasswordState === 'none'">Welcome Back</h3>
+          <h3 *ngIf="isSignupMode">Join Our School</h3>
+          <h3 *ngIf="forgotPasswordState !== 'none'">Reset Password</h3>
+          
+          <p class="state-subtitle" *ngIf="forgotPasswordState === 'request'">Enter your email to receive an OTP.</p>
+          <p class="state-subtitle" *ngIf="forgotPasswordState === 'verify'">Enter the 6-digit code sent to {{email}}</p>
+          <p class="state-subtitle" *ngIf="forgotPasswordState === 'reset'">Choose a strong new password.</p>
         </div>
-
-        <div *ngIf="signupSuccess" class="success-msg" style="background: #f0fdf4; color: #166534; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; border: 1px solid #bcf0da;">
-          <i class="pi pi-check-circle"></i> Registration successful! Please log in below.
-        </div>
-
+        
         <!-- LOGIN FORM -->
-        <form class="form-body" (submit)="handleLogin($event)" *ngIf="!isSignupMode">
-          <div class="input-field">
-            <label>Email ID</label>
-            <input type="email" placeholder="Enter your registered email" [(ngModel)]="email" name="email" required />
+        <form (submit)="handleLogin($event)" *ngIf="!isSignupMode && forgotPasswordState === 'none'">
+          <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" [(ngModel)]="email" name="email" placeholder="student@udcs.edu" required />
           </div>
-
-          <div class="input-field">
+          <div class="input-group">
             <label>Password</label>
-            <input type="password" placeholder="••••••••" [(ngModel)]="password" name="password" required />
+            <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" required />
           </div>
-
-          @if (loginError) {
-            <p style="color: red; font-size: 0.85rem; margin-top: -10px;">{{ loginError }}</p>
+          
+          @if (loginError) { 
+            <div class="error-container">
+              <p class="error-msg">{{ loginError }}</p>
+              @if (showForgotPasswordLink) {
+                <button type="button" class="btn-link-sm" (click)="forgotPasswordState = 'request'">Forgot Password?</button>
+              }
+            </div>
           }
-
-          <button type="submit" class="action-btn" [disabled]="isLoading">
-            <span *ngIf="isLoading" class="spinner-circle"></span>
-            {{ isLoading ? 'Verifying...' : 'Sign In' }}
+          
+          @if (signupSuccess) { <p class="success-msg">Action successful! Please sign in.</p> }
+          <button type="submit" class="portal-action-btn" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Sign In</span>
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
           </button>
-
-          <p class="toggle-text">
-            Don't have an account?
-            <span (click)="toggleSignup()">Sign Up</span>
-          </p>
+          
+          <div class="auth-footer">
+            <p>New Student? <span (click)="toggleSignup()">Register Here</span></p>
+          </div>
         </form>
+
+        <!-- FORGOT PASSWORD FLOW -->
+        <div *ngIf="forgotPasswordState !== 'none'" class="forgot-flow">
+          <form *ngIf="forgotPasswordState === 'request'" (submit)="handleForgotPasswordRequest()">
+            <div class="input-group">
+              <label>Registered Email</label>
+              <input type="email" [(ngModel)]="email" name="fEmail" placeholder="email@example.com" required />
+            </div>
+            <button type="submit" class="portal-action-btn" [disabled]="isLoading">Send OTP</button>
+            <p class="toggle-link"><span (click)="forgotPasswordState = 'none'">&larr; Back to Login</span></p>
+          </form>
+
+          <form *ngIf="forgotPasswordState === 'verify'" (submit)="handleVerifyOTP()">
+            <div class="input-group">
+              <label>6-Digit OTP</label>
+              <input type="text" [(ngModel)]="otp" name="fOtp" maxlength="6" placeholder="000000" style="text-align:center; letter-spacing: 10px; font-size: 1.5rem;" required />
+            </div>
+            <button type="submit" class="portal-action-btn" [disabled]="isLoading">Verify OTP</button>
+            <p class="toggle-link">
+              Didn't get code? 
+              <span *ngIf="!resendDisabled" (click)="handleResendOTP()">Resend Now</span>
+              <span *ngIf="resendDisabled" class="disabled-link">Resend in {{resendCountdown}}s</span>
+            </p>
+          </form>
+
+          <form *ngIf="forgotPasswordState === 'reset'" (submit)="handleResetPassword()">
+            <div class="input-group">
+              <label>New Password</label>
+              <input type="password" [(ngModel)]="newPassword" name="fNewPass" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="portal-action-btn" [disabled]="isLoading">Reset Password</button>
+          </form>
+          
+          @if (loginError) { <p class="error-msg mt-3">{{ loginError }}</p> }
+        </div>
 
         <!-- SIGNUP FORM -->
-        <form class="form-body" (submit)="handleSignup($event)" *ngIf="isSignupMode">
-          <div class="input-field">
+        <form (submit)="handleSignup($event)" *ngIf="isSignupMode">
+          <div class="input-group">
             <label>Full Name</label>
-            <input type="text" placeholder="Enter your full name" [(ngModel)]="signupData.fullName" name="fullName" required />
+            <input type="text" [(ngModel)]="signupData.fullName" name="fullName" placeholder="Enter your full name" required />
           </div>
-
-          <div class="input-field">
-            <label>Email ID</label>
-            <input type="email" placeholder="Enter your email" [(ngModel)]="signupData.email" name="email" required />
+          <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" [(ngModel)]="signupData.email" name="sEmail" placeholder="student@udcs.edu" required />
           </div>
-
-          <div class="input-field">
-            <label>Password</label>
-            <input type="password" placeholder="••••••••" [(ngModel)]="signupData.password" name="password" required />
+          <div class="input-group">
+            <label>Choose Password</label>
+            <input type="password" [(ngModel)]="signupData.password" name="sPassword" placeholder="••••••••" required />
           </div>
-
-          @if (loginError) {
-            <p style="color: red; font-size: 0.85rem; margin-top: -10px;">{{ loginError }}</p>
+          @if (loginError) { <p class="error-msg">{{ loginError }}</p> }
+          @if (signupSuccess) { 
+            <div class="success-msg animate-fade-in">
+              <i class="pi pi-check-circle"></i>
+              Your application details have been sent to school.
+            </div>
           }
-
-          <button type="submit" class="action-btn" [disabled]="isLoading">
+          <button type="submit" class="portal-action-btn" [disabled]="isLoading">
             <span *ngIf="isLoading" class="spinner-circle"></span>
-            {{ isLoading ? 'Registering...' : 'Register Now' }}
+            {{ isLoading ? 'Sending Application...' : 'Register Now' }}
           </button>
-
-          <p class="toggle-text">
-            Already have an account?
-            <span (click)="toggleSignup()">Sign In</span>
-          </p>
+          
+          <div class="auth-footer">
+            <p>Already have an account? <span (click)="toggleSignup()">Login Here</span></p>
+          </div>
         </form>
       </div>
-    </div>
-  </div>
-
-  <!-- HELP MODAL BACKDROP -->
-  <div
-    class="modal-backdrop"
-    *ngIf="showSignupPopup"
-    (click)="closeSignup()"
-  ></div>
-
-  <!-- HELP MODAL -->
-  <div class="modal" *ngIf="showSignupPopup">
-    <div class="modal-content">
-      <button class="close-btn" (click)="closeSignup()">×</button>
-      <h3>Portal Support</h3>
-      <p>If you have forgotten your password or are unable to login, please contact the IT Administrator or your Class Teacher for assistance.</p>
-      <button class="action-btn" (click)="closeSignup()">Okay, Got it</button>
     </div>
   </div>
 } @else {
-  <!-- DASHBOARD UI -->
-  <div class="dashboard-container">
-    
-    <!-- Dashboard Header -->
-    <header class="dashboard-header glass-card">
-      <div class="profile-section">
-        <img [src]="studentData?.profileImage || 'https://ui-avatars.com/api/?name=' + (studentData?.studentName || teacherData?.teacherName || 'Admin') + '&background=fadb5f&color=0c1e33'" 
-             (error)="handleImageError($event)"
-             alt="Profile" 
-             class="profile-pic" />
-        <div>
-          <h2>Welcome back, {{ studentData?.studentName || teacherData?.teacherName || 'Administrator' }}!</h2>
-          <p *ngIf="userRole === 'student'">Student ID: {{ studentData?.userId }} | {{ studentData?.className }} - {{ studentData?.section }}</p>
-          <p *ngIf="userRole === 'teacher'">Staff Portal | Subject: {{ teacherData?.subject }}</p>
-          <p *ngIf="userRole === 'admin'">Super Admin | Usha Devi Convent School Control Center</p>
+  <!-- POWER PORTAL UI (Sidebar Layout) -->
+  <div class="portal-layout">
+    <!-- Sidebar -->
+    <aside class="portal-sidebar">
+      <div class="sidebar-brand" routerLink="/" style="cursor: pointer;" title="Go back to Home Page">
+        <div class="udcs-logo logo-sm">UDCS</div>
+        <span>Portal v2.0</span>
+      </div>
+      
+      <div class="sidebar-user">
+        <img [src]="studentData?.profileImage || 'https://ui-avatars.com/api/?name=' + (studentData?.studentName || 'User') + '&background=facc15&color=0c4a6e'" alt="Profile">
+        <div class="user-info">
+          <h4>{{ studentData?.studentName || teacherData?.teacherName || 'Admin' }}</h4>
+          <p>{{ userRole | titlecase }}</p>
         </div>
       </div>
-      <button class="logout-btn" (click)="logout()">Logout</button>
-    </header>
 
-    <!-- CONTENT AREA BASED ON ROLE -->
-    <div class="portal-main-content">
-      
-      <!-- ADMIN VIEW -->
-      @if (userRole === 'admin' && adminData) {
-        <app-admin-dashboard [data]="adminData"></app-admin-dashboard>
-      }
+      <nav class="sidebar-nav">
+        <button class="nav-item" [class.active]="activeTab === 'overview' && (!userRole || userRole.toLowerCase() === 'student' || (userRole.toLowerCase() === 'admin' && adminActiveTab === 'overview'))" (click)="switchTab('overview')">
+          <span class="nav-icon"><i class="pi pi-chart-bar icon-blue"></i></span> Dashboard
+        </button>
 
-      <!-- TEACHER VIEW -->
-      @if (userRole === 'teacher' && teacherData) {
-        <app-teacher-dashboard [data]="teacherData"></app-teacher-dashboard>
-      }
+        @if (userRole?.toLowerCase() === 'admin') {
+          <button class="nav-item" [class.active]="adminActiveTab === 'teachers'" (click)="switchAdminTab('teachers')">
+            <span class="nav-icon"><i class="pi pi-id-card icon-purple"></i></span> Staff Directory
+          </button>
+          <button class="nav-item" [class.active]="adminActiveTab === 'students'" (click)="switchAdminTab('students')">
+            <span class="nav-icon"><i class="pi pi-users icon-green"></i></span> Student Database
+          </button>
+          <button class="nav-item" [class.active]="adminActiveTab === 'payroll'" (click)="switchAdminTab('payroll')">
+            <span class="nav-icon"><i class="pi pi-money-bill icon-orange"></i></span> Payroll
+          </button>
+          <button class="nav-item" [class.active]="adminActiveTab === 'circulars'" (click)="switchAdminTab('circulars')">
+            <span class="nav-icon"><i class="pi pi-megaphone icon-red"></i></span> Circulars
+          </button>
+          <button class="nav-item" [class.active]="adminActiveTab === 'inquiries'" (click)="switchAdminTab('inquiries')">
+            <span class="nav-icon"><i class="pi pi-envelope icon-blue"></i></span> Inquiries
+          </button>
+          <button class="nav-item" [class.active]="adminActiveTab === 'pending'" (click)="switchAdminTab('pending')">
+            <span class="nav-icon"><i class="pi pi-clock icon-yellow"></i></span> Pending Approvals
+          </button>
+          <button class="nav-item" [class.active]="adminActiveTab === 'fees'" (click)="switchAdminTab('fees')">
+            <span class="nav-icon"><i class="pi pi-cog icon-gray"></i></span> Fee Structure
+          </button>
+        }
+        
+        @if (userRole?.toLowerCase() === 'student') {
+          <button class="nav-item" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">
+            <span class="nav-icon"><i class="pi pi-user icon-blue"></i></span> My Profile
+          </button>
+          <button class="nav-item" [class.active]="activeTab === 'attendance'" (click)="switchTab('attendance')">
+            <span class="nav-icon"><i class="pi pi-calendar icon-red"></i></span> Attendance
+          </button>
+          <button class="nav-item" [class.active]="activeTab === 'homework'" (click)="switchTab('homework')">
+            <span class="nav-icon"><i class="pi pi-book icon-orange"></i></span> Homework
+          </button>
+          <button class="nav-item" [class.active]="activeTab === 'fees'" (click)="switchTab('fees')">
+            <span class="nav-icon"><i class="pi pi-wallet icon-green"></i></span> Fee Status
+          </button>
+          <button class="nav-item" [class.active]="activeTab === 'reviews'" (click)="switchTab('reviews')">
+            <span class="nav-icon"><i class="pi pi-star icon-yellow"></i></span> Academic Reviews
+          </button>
+        }
+      </nav>
 
-      <!-- STUDENT VIEW -->
-      @if (userRole === 'student' && studentData) {
-        @if (studentData.status === 'pending') {
-          <div class="pending-approval-container glass-card">
-            <div class="icon-wrapper">
-              <i class="pi pi-clock pi-spin"></i>
-            </div>
-            <h2>Approval Pending</h2>
-            <p>Your registration is currently being reviewed by the school administration.</p>
-            <p class="sub-text">Please check back later. Once approved, you will have full access to your student dashboard.</p>
-            <div class="status-badge">Pending Verification</div>
-            <button class="action-btn" (click)="logout()" style="margin-top: 20px; max-width: 200px;">Logout</button>
-          </div>
-        } @else if (studentData.status === 'rejected') {
-          <div class="pending-approval-container glass-card rejected">
-            <div class="icon-wrapper">
-              <i class="pi pi-times-circle"></i>
-            </div>
-            <h2>Application Rejected</h2>
-            <p>We regret to inform you that your registration has been rejected.</p>
-            <p class="sub-text">Please contact the school office for more information.</p>
-            <button class="action-btn" (click)="logout()" style="margin-top: 20px; max-width: 200px;">Logout</button>
-          </div>
-        } @else {
-          <div class="tab-navigation">
-          <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="switchTab('overview')">Dashboard Overview</button>
-          <button class="tab-btn" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">Profile</button>
-          <button class="tab-btn" [class.active]="activeTab === 'attendance'" (click)="switchTab('attendance')">Attendance</button>
-          <button class="tab-btn" [class.active]="activeTab === 'homework'" (click)="switchTab('homework')">Homework</button>
-          <button class="tab-btn" [class.active]="activeTab === 'fees'" (click)="switchTab('fees')">Fees & Payments</button>
-          <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="switchTab('reviews')">Remarks & Reviews</button>
+      <div class="sidebar-footer">
+        <a routerLink="/" class="back-site-link"><i class="pi pi-home"></i> Back to Site</a>
+        <button class="logout-btn-full" (click)="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="portal-main">
+      <header class="portal-top-bar">
+        <div class="page-title">
+          <h2>{{ (userRole === 'admin' ? adminActiveTab : activeTab) | titlecase }}</h2>
+          <p>Usha Devi Convent School Management Center</p>
         </div>
-
-        <div class="dashboard-content">
-          @if (activeTab === 'overview') { <app-overview [data]="studentData"></app-overview> }
-          @if (activeTab === 'profile') { <app-profile [data]="studentData"></app-profile> }
-          @if (activeTab === 'attendance') { <app-attendance [data]="studentData"></app-attendance> }
-          @if (activeTab === 'homework') { <app-homework [data]="studentData"></app-homework> }
-          @if (activeTab === 'fees') { <app-fees [data]="studentData"></app-fees> }
-          @if (activeTab === 'reviews') { <app-reviews [data]="studentData"></app-reviews> }
+        <div class="top-bar-actions">
+          <div class="notification-bell">🔔 <span class="badge">3</span></div>
+          <div class="date-display">{{ today | date:'fullDate' }}</div>
         </div>
-      }
-      }
+      </header>
 
-    </div>
+      <div class="portal-content-scroll">
+        @if (userRole === 'admin' && adminData) { <app-admin-dashboard [data]="adminData" [activeTab]="adminActiveTab"></app-admin-dashboard> }
+        @if (userRole === 'teacher' && teacherData) { <app-teacher-dashboard [data]="teacherData"></app-teacher-dashboard> }
+        @if (userRole === 'student' && studentData) {
+          @if (studentData.status === 'pending') {
+            <div class="status-center glass-card">
+              <span class="status-icon">⏳</span>
+              <h3>Application Pending</h3>
+              <p>Your portal access is currently under review by the UDCS administration.</p>
+            </div>
+          } @else {
+            <div class="tab-content-wrapper">
+              @if (activeTab === 'overview') { <app-overview [data]="studentData"></app-overview> }
+              @if (activeTab === 'profile') { <app-profile [data]="studentData"></app-profile> }
+              @if (activeTab === 'attendance') { <app-attendance [data]="studentData"></app-attendance> }
+              @if (activeTab === 'homework') { <app-homework [data]="studentData"></app-homework> }
+              @if (activeTab === 'fees') { <app-fees [data]="studentData"></app-fees> }
+              @if (activeTab === 'reviews') { <app-reviews [data]="studentData"></app-reviews> }
+            </div>
+          }
+        }
+      </div>
+    </main>
   </div>
 }

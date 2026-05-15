@@ -1,70 +1,64 @@
-<div class="admin-wrapper">
-  <!-- STATS HEADER -->
-  <div class="admin-stats-grid">
-    <div class="stat-card glass-card">
-      <i class="pi pi-users icon-blue"></i>
-      <div class="stat-info">
-        <p>Total Students</p>
-        <h3>{{ data.totalStudents }}</h3>
+<div class="admin-main-full">
+    <!-- DASHBOARD VIEW -->
+    <div class="admin-wrapper" *ngIf="!selectedStudent && !selectedTeacher">
+      <!-- STATS HEADER -->
+      <div class="admin-stats-grid">
+        <div class="stat-card glass-card">
+          <i class="pi pi-users icon-blue"></i>
+          <div class="stat-info">
+            <p>Students</p>
+            <h3>{{ data.totalStudents }}</h3>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <i class="pi pi-briefcase icon-yellow"></i>
+          <div class="stat-info">
+            <p>Staff</p>
+            <h3>{{ data.totalTeachers }}</h3>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <i class="pi pi-wallet icon-green"></i>
+          <div class="stat-info">
+            <p>Collected</p>
+            <h3>₹{{ data.totalFeesCollected | number }}</h3>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <i class="pi pi-exclamation-circle icon-red"></i>
+          <div class="stat-info">
+            <p>Pending</p>
+            <h3>₹{{ data.pendingFees | number }}</h3>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="stat-card glass-card">
-      <i class="pi pi-briefcase icon-yellow"></i>
-      <div class="stat-info">
-        <p>Total Staff</p>
-        <h3>{{ data.totalTeachers }}</h3>
-      </div>
-    </div>
-    <div class="stat-card glass-card">
-      <i class="pi pi-wallet icon-green"></i>
-      <div class="stat-info">
-        <p>Fees Collected</p>
-        <h3>₹{{ data.totalFeesCollected | number }}</h3>
-      </div>
-    </div>
-    <div class="stat-card glass-card">
-      <i class="pi pi-exclamation-circle icon-red"></i>
-      <div class="stat-info">
-        <p>Pending Dues</p>
-        <h3>₹{{ data.pendingFees | number }}</h3>
-      </div>
-    </div>
-  </div>
 
-  <!-- NAVIGATION -->
-  <div class="admin-nav glass-card">
-    <button [class.active]="activeTab === 'overview'" (click)="switchTab('overview')"><i class="pi pi-chart-bar"></i> Overview</button>
-    <button [class.active]="activeTab === 'pending'" (click)="switchTab('pending')" class="nav-pending">
-      <i class="pi pi-user-plus"></i> Pending Registrations
-      <span class="nav-badge" *ngIf="pendingStudents.length > 0">{{ pendingStudents.length }}</span>
-    </button>
-    <button [class.active]="activeTab === 'students'" (click)="switchTab('students')"><i class="pi pi-users"></i> Student Database</button>
-    <button [class.active]="activeTab === 'teachers'" (click)="switchTab('teachers')"><i class="pi pi-id-card"></i> Staff Directory</button>
-    <button [class.active]="activeTab === 'fees'" (click)="switchTab('fees')"><i class="pi pi-cog"></i> Fee Structure</button>
-    <button [class.active]="activeTab === 'payroll'" (click)="switchTab('payroll')"><i class="pi pi-money-bill"></i> Payroll</button>
-  </div>
-
-  <!-- CONTENT AREA -->
-  <div class="admin-content">
+      <!-- CONTENT AREA -->
+      <div class="admin-content">
     
     <!-- OVERVIEW -->
     <div *ngIf="activeTab === 'overview'" class="tab-pane fade-in">
       <div class="grid-2">
         <div class="glass-card panel">
-          <h3>Recent Activity</h3>
-          <div class="activity-list">
-            <p><i class="pi pi-plus-circle icon-green"></i> New student registration from Class 2</p>
-            <p><i class="pi pi-check-circle icon-blue"></i> Salary processed for 12 staff members</p>
-            <p><i class="pi pi-info-circle icon-yellow"></i> Fee structure updated for Class 5</p>
+          <h3>School Attendance</h3>
+          <div class="chart-container" style="position: relative; height:300px; width:100%">
+            <canvas baseChart [data]="attendanceChartData" [options]="attendanceChartOptions" [type]="attendanceChartType"></canvas>
           </div>
         </div>
         <div class="glass-card panel">
           <h3>Financial Health</h3>
-          <div class="progress-box">
-            <p>Collection Goal (May)</p>
-            <div class="progress-bar"><div class="fill" style="width: 75%"></div></div>
-            <span>75% Achieved</span>
+          <div class="chart-container" style="position: relative; height:300px; width:100%">
+            <canvas baseChart [data]="financeChartData" [options]="financeChartOptions" [type]="financeChartType"></canvas>
           </div>
+        </div>
+      </div>
+      
+      <div class="glass-card panel" style="margin-top: 25px;">
+        <h3>Recent Activity</h3>
+        <div class="activity-list" style="display: flex; gap: 20px; flex-wrap: wrap;">
+          <p style="background: var(--bg-soft); padding: 15px; border-radius: 10px; flex: 1;"><i class="pi pi-plus-circle icon-green"></i> New student registration from Class 2</p>
+          <p style="background: var(--bg-soft); padding: 15px; border-radius: 10px; flex: 1;"><i class="pi pi-check-circle icon-blue"></i> Salary processed for 12 staff members</p>
+          <p style="background: var(--bg-soft); padding: 15px; border-radius: 10px; flex: 1;"><i class="pi pi-info-circle icon-yellow"></i> Fee structure updated for Class 5</p>
         </div>
       </div>
     </div>
@@ -147,21 +141,23 @@
               <tr>
                 <th>ID</th>
                 <th>Name & Email</th>
+                <th>Father's Name</th>
                 <th>Class & Section</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let s of data.students">
+              <tr *ngFor="let s of data.students; let i = index">
                 <ng-container *ngIf="(selectedFilterClass === 'All' || s.className === selectedFilterClass) && (!searchText || s.name.toLowerCase().includes(searchText.toLowerCase()) || s.id.includes(searchText))">
-                  <td class="id-col">#{{ s.id.slice(0, 8) }}</td>
+                  <td class="id-col">{{ i + 1 }}</td>
                   <td>
                     <div class="name-cell">
                       <strong style="color: #1e293b;">{{ s.name || s.fullName }}</strong>
                       <span style="color: #64748b;">{{ s.email }}</span>
                     </div>
                   </td>
+                  <td style="color: #1e293b;">{{ s.fatherName || 'N/A' }}</td>
                   <td style="color: #1e293b;">Class {{ s.className }} - {{ s.section }}</td>
                   <td><span class="badge" [class]="s.status">{{ s.status }}</span></td>
                   <td class="action-cell">
@@ -240,12 +236,12 @@
             </div>
             <div class="input-row">
               <div class="field">
-                <label>Aadhar ID *</label>
-                <input type="text" placeholder="12-digit number" [(ngModel)]="newStudent.aadharId" name="sAadhar" required />
+                <label>Aadhar ID (12 Digits) *</label>
+                <input type="text" placeholder="12-digit number" [(ngModel)]="newStudent.aadharId" name="sAadhar" maxlength="12" minlength="12" pattern="\d{12}" required />
               </div>
               <div class="field">
-                <label>Mobile Number *</label>
-                <input type="text" placeholder="Contact No" [(ngModel)]="newStudent.contactNo" name="sContact" required />
+                <label>Mobile Number (10 Digits) *</label>
+                <input type="text" placeholder="10-digit number" [(ngModel)]="newStudent.contactNo" name="sContact" maxlength="10" minlength="10" pattern="\d{10}" required />
               </div>
             </div>
           </div>
@@ -283,39 +279,102 @@
 
 
     <!-- TEACHER MANAGEMENT -->
-    <div *ngIf="activeTab === 'teachers'" class="tab-pane fade-in">
-      <div class="grid-layout">
+    <div *ngIf="activeTab === 'teachers' && !selectedTeacher" class="tab-pane fade-in">
+      <div *ngIf="teacherViewMode === 'list'" class="staff-mgmt-view">
         <div class="glass-card panel">
-          <h3>Register New Teacher</h3>
-          <form (submit)="handleRegisterTeacher()">
-            <div class="input-row">
-              <input type="text" placeholder="Full Name" [(ngModel)]="newTeacher.name" name="name" required />
-              <input type="email" placeholder="Email" [(ngModel)]="newTeacher.email" name="email" required />
+          <div class="panel-header">
+            <div class="header-left">
+              <h3>Staff Directory</h3>
+              <p class="subtitle">Managing {{ data.teachers.length }} faculty members</p>
             </div>
-            <div class="input-row">
-              <input type="text" placeholder="Subject" [(ngModel)]="newTeacher.subject" name="subject" required />
-              <input type="number" placeholder="Base Salary" [(ngModel)]="newTeacher.salary" name="salary" required />
-            </div>
-            <button type="submit" class="action-btn" [disabled]="isProcessing">
-              <span *ngIf="isProcessing" class="spinner-circle"></span>
-              <span>Register Staff</span>
-            </button>
-            <p *ngIf="successMessage" class="success-txt">{{ successMessage }}</p>
-          </form>
-        </div>
-        
-        <div class="glass-card panel">
-          <h3>Staff List</h3>
-          <div class="teacher-list-scroll">
-            <div class="teacher-item" *ngFor="let t of data.teachers">
-              <div class="t-info">
-                <strong>{{ t.name }}</strong>
-                <p>{{ t.subject }} | {{ t.email }}</p>
-              </div>
-              <span class="t-attendance">{{ t.attendance }}% Attd.</span>
+            <div class="header-right">
+              <button class="action-btn-sm" (click)="showAddTeacher()">
+                <i class="pi pi-plus"></i> Add Staff
+              </button>
             </div>
           </div>
+          
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name & Email</th>
+                  <th>Subject</th>
+                  <th>Salary</th>
+                  <th>Attendance</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let t of data.teachers">
+                  <td>
+                    <div class="name-cell">
+                      <strong>{{ t.name }}</strong>
+                      <span>{{ t.email }}</span>
+                    </div>
+                  </td>
+                  <td>{{ t.subject }}</td>
+                  <td>₹{{ t.salary | number }}</td>
+                  <td>
+                    <div class="att-mini">
+                      <span class="val">{{ t.attendance }}%</span>
+                      <div class="progress-mini-att"><div class="p-fill" [style.width]="t.attendance + '%'"></div></div>
+                    </div>
+                  </td>
+                  <td class="action-cell">
+                    <button class="btn-edit" (click)="handleEditTeacher(t)">Edit</button>
+                    <button class="btn-view" (click)="handleViewTeacher(t)">View</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
+
+      <!-- TEACHER FORM VIEW -->
+      <div *ngIf="teacherViewMode === 'form'" class="glass-card panel form-page fade-in">
+        <div class="panel-header">
+          <button class="back-link" (click)="teacherViewMode = 'list'">
+            <span>&larr;</span> Back to Directory
+          </button>
+          <h3>{{ isEditingTeacher ? 'Update Staff Profile' : 'Register New Faculty' }}</h3>
+        </div>
+
+        <form (submit)="handleRegisterTeacher()" class="multi-step-form">
+          <div class="form-section">
+            <h4><i class="pi pi-user"></i> Professional Information</h4>
+            <div class="input-row">
+              <div class="field">
+                <label>Full Name *</label>
+                <input type="text" placeholder="Full Name" [(ngModel)]="newTeacher.name" name="tName" required />
+              </div>
+              <div class="field">
+                <label>Email Address *</label>
+                <input type="email" placeholder="Email" [(ngModel)]="newTeacher.email" name="tEmail" required />
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="field">
+                <label>Expertise / Subject *</label>
+                <input type="text" placeholder="e.g. Mathematics" [(ngModel)]="newTeacher.subject" name="tSubject" required />
+              </div>
+              <div class="field">
+                <label>Base Monthly Salary (₹) *</label>
+                <input type="number" placeholder="Salary" [(ngModel)]="newTeacher.salary" name="tSalary" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <button type="button" class="btn-cancel" (click)="teacherViewMode = 'list'">Cancel</button>
+            <button type="submit" class="action-btn" [disabled]="isProcessing">
+              <span *ngIf="isProcessing" class="spinner-circle"></span>
+              <span>{{ isEditingTeacher ? 'Save Changes' : 'Register Staff' }}</span>
+            </button>
+          </div>
+          <p *ngIf="successMessage" class="success-txt">{{ successMessage }}</p>
+        </form>
       </div>
     </div>
 
@@ -377,79 +436,357 @@
       </div>
     </div>
 
-  </div>
+    <!-- CIRCULARS -->
+    <div *ngIf="activeTab === 'circulars'" class="tab-pane fade-in">
+      <div class="grid-layout">
+        <div class="glass-card panel">
+          <h3>Post New Circular</h3>
+          <form (submit)="handleCreateCircular()">
+            <div class="field mb-3">
+              <label>Title</label>
+              <input type="text" placeholder="Circular Title" [(ngModel)]="newCircular.title" name="cTitle" required />
+            </div>
+            <div class="input-row mb-3">
+              <div class="field">
+                <label>Target Audience</label>
+                <select [(ngModel)]="newCircular.targetAudience" name="cAudience">
+                  <option value="All">Everyone</option>
+                  <option value="Students">Students Only</option>
+                  <option value="Teachers">Teachers Only</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Category</label>
+                <select [(ngModel)]="newCircular.category" name="cCat">
+                  <option value="Notice">General Notice</option>
+                  <option value="Academic">Academic</option>
+                  <option value="Holiday">Holiday</option>
+                  <option value="Event">Event</option>
+                </select>
+              </div>
+            </div>
+            <div class="field mb-3">
+              <label>Content</label>
+              <textarea placeholder="Write circular content here..." [(ngModel)]="newCircular.content" name="cContent" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="action-btn" [disabled]="isProcessing">
+              <span *ngIf="isProcessing" class="spinner-circle"></span>
+              <span>Publish Circular</span>
+            </button>
+          </form>
+        </div>
 
-  <!-- FULL STUDENT PROFILE PAGE (Replaces Modal) -->
-  <div *ngIf="selectedStudent" class="full-profile-page fade-in">
-    <div class="page-header">
-      <button class="back-btn" (click)="selectedStudent = null">
-        <i class="pi pi-arrow-left"></i> Back to Dashboard
-      </button>
-      <div class="header-actions">
-        <button class="btn-approve" (click)="handleEditStudent(selectedStudent); selectedStudent = null">Edit Profile</button>
+        <div class="glass-card panel">
+          <h3>Recent Circulars</h3>
+          <div class="circulars-list">
+            <div class="circular-item" *ngFor="let c of circulars">
+              <div class="c-info">
+                <h4>{{ c.title }}</h4>
+                <div class="c-meta">
+                  <span class="badge" [class]="c.category">{{ c.category }}</span>
+                  <span class="target">{{ c.targetAudience }}</span>
+                  <span class="date">{{ c.createdAt | date:'mediumDate' }}</span>
+                </div>
+                <p class="c-preview">{{ c.content | slice:0:100 }}...</p>
+              </div>
+              <button class="btn-delete-sm" (click)="handleDeleteCircular(c.id)"><i class="pi pi-trash"></i></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="profile-layout">
-      <!-- Left Card: Identity -->
-      <div class="glass-card id-card">
-        <div class="avatar-circle">
-          {{ selectedStudent.name.charAt(0) }}
-        </div>
-        <h2>{{ selectedStudent.name }}</h2>
-        <p class="subtitle">Roll No: {{ selectedStudent.rollNo || selectedStudent.rollNumber }}</p>
-        <div class="status-tags">
-          <span class="badge" [class]="selectedStudent.status">{{ selectedStudent.status }}</span>
-          <span class="badge fee" [class]="selectedStudent.feeStatus === 'Paid' ? 'active' : 'pending'">{{ selectedStudent.feeStatus }} Fees</span>
+    <!-- INQUIRIES -->
+    <div *ngIf="activeTab === 'inquiries'" class="tab-pane fade-in">
+      <div class="glass-card panel">
+        <h3>Visitor Inquiries (Contact Form)</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email / Phone</th>
+                <th>Subject</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let msg of contacts">
+                <td>{{ msg.createdAt | date:'shortDate' }}</td>
+                <td><strong>{{ msg.name }}</strong></td>
+                <td>
+                  <div class="contact-sub">
+                    <span>{{ msg.email }}</span>
+                    <span>{{ msg.phone }}</span>
+                  </div>
+                </td>
+                <td>{{ msg.subject }}</td>
+                <td class="msg-cell">{{ msg.message }}</td>
+              </tr>
+              <tr *ngIf="contacts.length === 0">
+                <td colspan="5" class="text-center">No inquiries found.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
+    </div>
+      </div> <!-- end admin-content -->
+    </div> <!-- end admin-wrapper -->
 
-      <!-- Right Card: Details -->
+
+<!-- FULL STUDENT PROFILE VIEW -->
+<div *ngIf="selectedStudent" class="profile-view-container fade-in">
+  <div class="view-header">
+    <button class="back-pill" (click)="selectedStudent = null">
+      <i class="pi pi-arrow-left"></i> Back to Database
+    </button>
+    <div class="header-actions">
+      <button class="btn-edit-profile" (click)="handleEditStudent(selectedStudent); selectedStudent = null">
+        <i class="pi pi-user-edit"></i> Edit Profile
+      </button>
+    </div>
+  </div>
+
+  <div class="profile-hero glass-card">
+    <div class="hero-cover"></div>
+    <div class="hero-content">
+      <div class="avatar-wrapper">
+        <div class="avatar-main">
+          {{ (selectedStudent.name || selectedStudent.fullName).charAt(0) }}
+        </div>
+        <div class="status-indicator" [class]="selectedStudent.status"></div>
+      </div>
+      <div class="profile-title">
+        <h1>{{ selectedStudent.name || selectedStudent.fullName }}</h1>
+        <p class="id-tagline">Roll No: {{ selectedStudent.rollNo || selectedStudent.rollNumber || 'Not Assigned' }} • ID: #{{ selectedStudent.id.substring(0,8) }}</p>
+      </div>
+      <div class="hero-badges">
+        <span class="badge" [class]="selectedStudent.status">{{ selectedStudent.status }}</span>
+        <span class="badge fee-status" [class]="selectedStudent.feeStatus === 'Paid' ? 'paid' : 'due'">
+          {{ selectedStudent.feeStatus }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+    <div class="grid-col main">
       <div class="glass-card info-panel">
-        <div class="info-section">
-          <h3><i class="pi pi-user"></i> Personal Information</h3>
-          <div class="info-grid">
-            <div class="info-item"><label>Date of Birth</label><span>{{ selectedStudent.dob }}</span></div>
-            <div class="info-item"><label>Gender</label><span>{{ selectedStudent.gender }}</span></div>
-            <div class="info-item"><label>Blood Group</label><span>{{ selectedStudent.bloodGroup || 'N/A' }}</span></div>
-            <div class="info-item"><label>Aadhar ID</label><span>{{ selectedStudent.aadharId || 'N/A' }}</span></div>
-          </div>
+        <div class="section-head">
+          <i class="pi pi-user"></i>
+          <h3>Personal & Family Details</h3>
         </div>
-
-        <div class="info-section">
-          <h3><i class="pi pi-users"></i> Family Details</h3>
-          <div class="info-grid">
-            <div class="info-item"><label>Father's Name</label><span>{{ selectedStudent.fatherName }}</span></div>
-            <div class="info-item"><label>Mother's Name</label><span>{{ selectedStudent.motherName || 'N/A' }}</span></div>
+        <div class="info-rows">
+          <div class="info-row">
+            <div class="info-cell">
+              <label>Father's Name</label>
+              <span class="val-bold">{{ selectedStudent.fatherName || 'Not Provided' }}</span>
+            </div>
+            <div class="info-cell">
+              <label>Mother's Name</label>
+              <span class="val-bold">{{ selectedStudent.motherName || 'Not Provided' }}</span>
+            </div>
           </div>
-        </div>
-
-        <div class="info-section">
-          <h3><i class="pi pi-id-card"></i> Academic & Contact</h3>
-          <div class="info-grid">
-            <div class="info-item"><label>Class & Section</label><span>Class {{ selectedStudent.className }} - {{ selectedStudent.section }}</span></div>
-            <div class="info-item"><label>Admission Date</label><span>{{ selectedStudent.admissionDate || 'N/A' }}</span></div>
-            <div class="info-item"><label>Contact Number</label><span>{{ selectedStudent.contactNo }}</span></div>
-            <div class="info-item"><label>Email Address</label><span>{{ selectedStudent.email }}</span></div>
+          <div class="info-row">
+            <div class="info-cell">
+              <label>Date of Birth</label>
+              <span>{{ selectedStudent.dob | date:'longDate' }}</span>
+            </div>
+            <div class="info-cell">
+              <label>Gender</label>
+              <span>{{ selectedStudent.gender || 'N/A' }}</span>
+            </div>
           </div>
-        </div>
-
-        <div class="info-section full-width">
-          <h3><i class="pi pi-map-marker"></i> Residential Address</h3>
-          <p class="address-text">{{ selectedStudent.address }}</p>
-        </div>
-
-        <div class="info-section stats-section">
-          <div class="stat-card">
-            <label>Attendance</label>
-            <div class="stat-value">{{ selectedStudent.attendance }}%</div>
-          </div>
-          <div class="stat-card">
-            <label>Academic Standing</label>
-            <div class="stat-value">Excellent</div>
+          <div class="info-row">
+            <div class="info-cell">
+              <label>Aadhar ID</label>
+              <span class="masked-id">{{ selectedStudent.aadharId || '•••• •••• ••••' }}</span>
+            </div>
+            <div class="info-cell">
+              <label>Blood Group</label>
+              <span>{{ selectedStudent.bloodGroup || 'Not Specified' }}</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <div class="glass-card info-panel mt-4">
+        <div class="section-head">
+          <i class="pi pi-map-marker"></i>
+          <h3>Contact & Address</h3>
+        </div>
+        <div class="info-rows">
+          <div class="info-row">
+            <div class="info-cell">
+              <label>Mobile Number</label>
+              <span class="val-bold">{{ selectedStudent.contactNo || 'N/A' }}</span>
+            </div>
+            <div class="info-cell">
+              <label>Email Address</label>
+              <span>{{ selectedStudent.email }}</span>
+            </div>
+          </div>
+          <div class="info-row full">
+            <div class="info-cell">
+              <label>Residential Address</label>
+              <p class="address-val">{{ selectedStudent.address || 'Address not provided' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-col side">
+      <div class="glass-card info-panel">
+        <div class="section-head">
+          <i class="pi pi-book"></i>
+          <h3>Academic Record</h3>
+        </div>
+        <div class="info-rows">
+          <div class="info-cell mb-3">
+            <label>Current Class</label>
+            <span class="val-xl">Class {{ selectedStudent.className }} - {{ selectedStudent.section }}</span>
+          </div>
+          <div class="info-cell">
+            <label>Admission Date</label>
+            <span>{{ selectedStudent.admissionDate | date:'mediumDate' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card info-panel mt-4">
+        <div class="section-head">
+          <i class="pi pi-chart-line"></i>
+          <h3>Attendance Trend</h3>
+        </div>
+        <div class="attendance-stat">
+          <span class="att-val">{{ selectedStudent.attendance || 92 }}%</span>
+          <span class="att-label">Average Attendance</span>
+        </div>
+        <div class="mini-chart">
+          <canvas baseChart [data]="studentAttChartData" [options]="attendanceChartOptions" [type]="attendanceChartType"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FULL TEACHER PROFILE VIEW -->
+<div *ngIf="selectedTeacher" class="profile-view-container fade-in">
+  <div class="view-header">
+    <button class="back-pill" (click)="selectedTeacher = null">
+      <i class="pi pi-arrow-left"></i> Back to Directory
+    </button>
+    <div class="header-actions">
+      <button class="btn-edit-profile" (click)="handleEditTeacher(selectedTeacher); selectedTeacher = null">
+        <i class="pi pi-user-edit"></i> Edit Profile
+      </button>
+    </div>
+  </div>
+
+  <div class="profile-hero glass-card teacher-hero">
+    <div class="hero-cover teacher-cover"></div>
+    <div class="hero-content">
+      <div class="avatar-wrapper">
+        <div class="avatar-main teacher-avatar">
+          {{ (selectedTeacher.name).charAt(0) }}
+        </div>
+        <div class="status-indicator active"></div>
+      </div>
+      <div class="profile-title">
+        <h1>{{ selectedTeacher.name }}</h1>
+        <p class="id-tagline">Faculty ID: #{{ selectedTeacher.id.substring(0,8) }} • Joining Date: {{ selectedTeacher.joiningDate | date:'mediumDate' }}</p>
+      </div>
+      <div class="hero-badges">
+        <span class="badge active">Active Staff</span>
+        <span class="badge subject-badge">{{ selectedTeacher.subject }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+    <div class="grid-col main">
+      <div class="glass-card info-panel">
+        <div class="section-head">
+          <i class="pi pi-id-card"></i>
+          <h3>Professional Profile</h3>
+        </div>
+        <div class="info-rows">
+          <div class="info-row">
+            <div class="info-cell">
+              <label>Expertise</label>
+              <span class="val-bold">{{ selectedTeacher.subject }}</span>
+            </div>
+            <div class="info-cell">
+              <label>Experience</label>
+              <span>Verified Faculty</span>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-cell">
+              <label>Monthly Salary</label>
+              <span class="val-bold">₹{{ selectedTeacher.salary | number }}</span>
+            </div>
+            <div class="info-cell">
+              <label>Joining Date</label>
+              <span>{{ selectedTeacher.joiningDate | date:'longDate' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card info-panel mt-4">
+        <div class="section-head">
+          <i class="pi pi-envelope"></i>
+          <h3>Communication Details</h3>
+        </div>
+        <div class="info-rows">
+          <div class="info-row">
+            <div class="info-cell">
+              <label>Official Email</label>
+              <span class="val-bold">{{ selectedTeacher.email }}</span>
+            </div>
+            <div class="info-cell">
+              <label>Contact Type</label>
+              <span>Institutional Account</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="glass-card info-panel mt-4">
+        <div class="section-head">
+          <i class="pi pi-money-bill"></i>
+          <h3>Salary Payment History</h3>
+        </div>
+        <div class="salary-history-list">
+          <div class="salary-record-row" *ngFor="let p of (selectedTeacher.salaryHistory || [])">
+            <div class="s-date">{{ p.date | date:'MMM yyyy' }}</div>
+            <div class="s-amt">₹{{ p.amount | number }}</div>
+            <div class="s-status"><span class="badge active">Paid</span></div>
+            <div class="s-txn">TXN: {{ p.txnId }}</div>
+          </div>
+          <div class="empty-state-mini" *ngIf="!(selectedTeacher.salaryHistory?.length)">
+            <i class="pi pi-info-circle"></i>
+            <p>No payroll history found for this staff member.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-col side">
+      <div class="glass-card info-panel">
+        <div class="section-head">
+          <i class="pi pi-calendar-check"></i>
+          <h3>Staff Performance</h3>
+        </div>
+        <div class="attendance-stat">
+          <span class="att-val">{{ selectedTeacher.attendance }}%</span>
+          <span class="att-label">Staff Attendance</span>
+        </div>
+        <p class="perf-text">Consistent performance and active engagement with assigned classes.</p>
+      </div>
+    </div>
     </div>
   </div>
 </div>
